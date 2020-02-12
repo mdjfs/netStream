@@ -44,7 +44,7 @@ public class Login {
 			return exceptions_login.ReportErrorMessage(message);
 			
 		} 
-		catch (SQLException | NoSuchAlgorithmException e) 
+		catch (NullPointerException | SQLException | NoSuchAlgorithmException e) 
 		{
 			Pool.giveInstance();
 			e.printStackTrace();

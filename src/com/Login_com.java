@@ -2,10 +2,12 @@ package com;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import aux.ReportExceptions;
+import manage.FindID;
 import manage.Login;
 
 
@@ -27,7 +30,6 @@ public class Login_com extends HttpServlet {
 	private ReportExceptions servlet_exception = new ReportExceptions();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setHeader("Access-Control-Allow-Origin","*");
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		String json = request.getParameter("json");
@@ -45,7 +47,34 @@ public class Login_com extends HttpServlet {
 			{
 				Login request_login = new Login();
 				json_response =  request_login.SetLogin(json_request);
-				out.print(json_response);
+				if(json_response.get("status").equals("200"))
+				{
+					FindID give_id_cookie = new FindID();
+					String id = null;
+					try 
+					{
+						id = give_id_cookie.ReturnIDbyConstraint(json_request.get("constraint").toString());
+					} 
+					catch (SQLException e) 
+					{
+						out.print(servlet_exception.ReportErrorMessage(e.getMessage()));
+						e.printStackTrace();
+					}
+					if(id != null) {
+						Cookie ID =new Cookie("ID",id);
+						System.out.println(request.getCookies());
+						response.addCookie(ID);
+						out.print(json_response);
+					}
+					else
+					{
+						out.print(servlet_exception.ReportErrorMessage("error on create session"));
+					}
+				}
+				else
+				{
+					out.print(json_response);
+				}
 			}
 			else
 			{

@@ -1,6 +1,9 @@
 
 function manage_response(response) {
-
+  alert(response["message"]);
+  if(response["status"] == "200"){
+    window.location.href = "index.html";
+  }
 }
 
 function send() {
@@ -9,8 +12,9 @@ function send() {
   var form = new FormData();
   form.append("json", '{"constraint":"' +
     logname.value + '", "password":"' + logpass.value + '"}');
-  fetch('http://localhost:8080/netStream/login', {
+  fetch('login', {
     method: 'POST',
+    credentials: 'include',
     body: form,
   })
     .then(response => response.json())

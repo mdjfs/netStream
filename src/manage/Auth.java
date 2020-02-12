@@ -12,7 +12,7 @@ public class Auth {
 	private HashPassword check_hash = new HashPassword();
 	
 	
-	public boolean[] is_user_validate(String constraint, String password) throws SQLException, NoSuchAlgorithmException
+	public boolean[] is_user_validate(String constraint, String password) throws SQLException, NoSuchAlgorithmException, NullPointerException
 	{
 		Database ConnectionChecker = Pool.getInstance();
 		ResultSet rs;
