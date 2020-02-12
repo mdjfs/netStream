@@ -70,10 +70,14 @@ public class Sessions {
 		{
 			rs = ConnectionSession.SelectWhereConstraintUnique("users", "name_users", constraint);
 		}
-		String id = "";
+		if(rs == null)
+			return false;
+		String id = null;
 		while(rs.next()) {
 			id = rs.getString("id_users");
 		}
+		if (id == null)
+			return false;
 		rs = ConnectionSession.SelectWhereConstraintUnique("sessions", "id_users", id);
 		String time = null;
 		while(rs.next()) {

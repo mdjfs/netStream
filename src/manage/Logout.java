@@ -18,11 +18,18 @@ public class Logout {
 		JSONObject output_json = new JSONObject();
 		try 
 		{
-			sessions_logout.killSession(input_json.get("constraint").toString());
-			output_json.put("results", "Success");
-			output_json.put("message", "You are Log-Out");
-			output_json.put("status", "200");
-			return output_json;
+			if(sessions_logout.is_have_session(input_json.get("constraint").toString()))
+			{
+				sessions_logout.killSession(input_json.get("constraint").toString());
+				output_json.put("results", "Success");
+				output_json.put("message", "You are Log-Out");
+				output_json.put("status", "200");
+				return output_json;
+			}
+			else
+			{
+				return exceptions_logout.ReportErrorMessage("This session dont exist");
+			}
 			
 		} 
 		catch (SQLException e) 
