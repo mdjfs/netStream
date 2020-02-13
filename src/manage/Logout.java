@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.json.simple.JSONObject;
 
 import aux.ReportExceptions;
+import resources.Pool;
 
 public class Logout {
 	
@@ -35,6 +36,7 @@ public class Logout {
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
+			Pool.giveInstance();
 			return exceptions_logout.ReportErrorMessage(e.getMessage());
 		}
 		
