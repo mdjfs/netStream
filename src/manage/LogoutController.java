@@ -14,14 +14,22 @@ public class LogoutController {
 	
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject setLogout(JSONObject input_json) 
+	public JSONObject setLogout(String id) 
 	{
-		JSONObject output_json = new JSONObject();
+		FindID Logout_ID = new FindID();
+		String constraint;
+		try {
+			constraint = Logout_ID.returnConstraintbyID(id);
+		} 
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return messages_logout.reportErrorMessage(e1.getMessage());
+		}
 		try 
 		{
-			if(sessions_logout.is_have_session(input_json.get("constraint").toString()))
+			if(sessions_logout.is_have_session(constraint))
 			{
-				sessions_logout.killSession(input_json.get("constraint").toString());
+				sessions_logout.killSession(constraint);
 				return messages_logout.reportSuccessMessage("You are Log-Out");
 			}
 			else

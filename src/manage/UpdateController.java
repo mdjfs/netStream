@@ -31,30 +31,23 @@ public class UpdateController {
 				return messages_update.reportErrorMessage("The user not have session");
 			if(constraint==null)
 				return messages_update.reportErrorMessage("Dont exists user by this id");
-			boolean[] status = checker_islogin.is_user_validate(constraint, 
-					input_json.get("password").toString());
-			if(status[0] && status[1]) {
-				String id = input_json.get("id").toString();
-				String param_to_update = input_json.get("parameter").toString();
-				String value_to_update = input_json.get("value").toString();
-				boolean param_sanitize = sanitize_update.is_sanitize(param_to_update);
-				boolean value_sanitize = sanitize_update.is_sanitize(value_to_update);
-				boolean id_sanitize = sanitize_update.is_sanitize(id);
-				if(param_sanitize && value_sanitize && id_sanitize) 
-				{
-					updateParam(param_to_update, value_to_update, id);
-					return messages_update.reportSuccessMessage(param_to_update + " is update");	
-				}
-				else
-				{
-					return messages_update.reportErrorMessage("You inputs not have the requeriments");
-				}
+			String id = input_json.get("id").toString();
+			String param_to_update = input_json.get("parameter").toString();
+			String value_to_update = input_json.get("value").toString();
+			boolean param_sanitize = sanitize_update.is_sanitize(param_to_update);
+			boolean value_sanitize = sanitize_update.is_sanitize(value_to_update);
+			boolean id_sanitize = sanitize_update.is_sanitize(id);
+			if(param_sanitize && value_sanitize && id_sanitize) 
+			{
+				updateParam(param_to_update, value_to_update, id);
+				return messages_update.reportSuccessMessage(param_to_update + " is update");	
 			}
 			else
 			{
-				return messages_update.reportErrorMessage("The password is invalid !");
+				return messages_update.reportErrorMessage("You inputs not have the requeriments");
 			}
-		} catch (NoSuchAlgorithmException | NullPointerException | SQLException e) {
+		} 
+		catch (NoSuchAlgorithmException | NullPointerException | SQLException e) {
 			Pool.giveInstance();
 			e.printStackTrace();
 			return messages_update.reportErrorMessage(e.getMessage());

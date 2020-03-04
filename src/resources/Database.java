@@ -16,7 +16,7 @@ public class Database {
 		try 
 		{
 			Class.forName("org.postgresql.Driver");
-			this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/netStream","marcos","Golf45");
+			this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/netStream","postgres","postgres");
 			this.statement = conn.createStatement();
 		} 
 		catch (SQLException | ClassNotFoundException sqle) 

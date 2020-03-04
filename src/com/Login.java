@@ -1,16 +1,16 @@
 package com;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,7 +23,6 @@ import manage.LoginController;
 
 
 @WebServlet("/login")
-@MultipartConfig
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
@@ -32,7 +31,12 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		String json = request.getParameter("json");
+		StringBuffer buffertext = new StringBuffer();
+		BufferedReader reader = request.getReader();
+		String line = "";
+		while ((line = reader.readLine()) != null)
+			buffertext.append(line);
+		String json = buffertext.toString();
 		if (json==null)
 		{
 			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
@@ -61,9 +65,8 @@ public class Login extends HttpServlet {
 						e.printStackTrace();
 					}
 					if(id != null) {
-						Cookie ID =new Cookie("ID",id);
-						System.out.println(request.getCookies());
-						response.addCookie(ID);
+						HttpSession create_session = request.getSession(true);
+						create_session.setAttribute("ID", id);
 						out.print(json_response);
 					}
 					else
