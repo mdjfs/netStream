@@ -7,30 +7,31 @@ import java.time.Instant;
 import org.json.simple.JSONObject;
 
 import aux.HashPassword;
-import aux.ReportExceptions;
+import aux.JSONMessages;
 import aux.Sanitize;
 import resources.Pool;
 import resources.Database;
 
-public class Register {
+public class RegisterController {
+
+	JSONObject output_json = new JSONObject();
+	JSONMessages messages_register = new JSONMessages();
+	HashPassword hashing_register = new HashPassword();
+	Sanitize sanitize_register = new Sanitize();
 	
-	public Register() 
+	public RegisterController() 
 	{
 		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject SetRegister(JSONObject input_json) 
+	public JSONObject setRegister(JSONObject input_json) 
 	{
-		JSONObject output_json = new JSONObject();
-		ReportExceptions have_exceptions_register = new ReportExceptions();
-		HashPassword hashing_register = new HashPassword();
-		Sanitize sanitize_register = new Sanitize();
 		if(!(sanitize_register.is_sanitize(input_json.get("name").toString()) &&
 				sanitize_register.is_sanitize(input_json.get("email").toString())))
 		{
 			String message = "Your username or email fails the requeriments";
-			return have_exceptions_register.ReportErrorMessage(message);
+			return messages_register.reportErrorMessage(message);
 		}
 		try 
 		{
@@ -41,24 +42,21 @@ public class Register {
 			SQL += "','"+Instant.now().toString()+"');";
 			try 
 			{
-				ConnectionRegister.Insert(SQL);
-				output_json.put("results", "Success");
-				output_json.put("message", "You are Registered");
-				output_json.put("status", "200");
+				ConnectionRegister.insert(SQL);
 				Pool.giveInstance();
-				return output_json;
+				return messages_register.reportSuccessMessage("You are Registered");
 			} 
 			catch (SQLException e) 
 			{
 				e.printStackTrace();
 				Pool.giveInstance();
-				return have_exceptions_register.ReportErrorMessage(e.getMessage());
+				return messages_register.reportErrorMessage(e.getMessage());
 			}
 		} 
 		catch (NoSuchAlgorithmException e1) 
 		{
 			e1.printStackTrace();
-			return have_exceptions_register.ReportErrorMessage(e1.getMessage());
+			return messages_register.reportErrorMessage(e1.getMessage());
 		}
 		
 	}

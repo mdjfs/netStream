@@ -16,18 +16,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import aux.ReportExceptions;
+import aux.JSONMessages;
 import manage.FindID;
-import manage.Login;
+import manage.LoginController;
 
 
 
 @WebServlet("/login")
 @MultipartConfig
-public class Login_com extends HttpServlet {
+public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
-	private ReportExceptions servlet_exception = new ReportExceptions();
+	private JSONMessages servlet_messages = new JSONMessages();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -35,7 +35,7 @@ public class Login_com extends HttpServlet {
 		String json = request.getParameter("json");
 		if (json==null)
 		{
-			out.print(servlet_exception.ReportErrorMessage("Dont exist parameter json"));
+			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
 		}
 		try 
 		{
@@ -45,19 +45,19 @@ public class Login_com extends HttpServlet {
 			boolean is_password = json_request.containsKey("password");
 			if(is_constraint && is_password)
 			{
-				Login request_login = new Login();
-				json_response =  request_login.SetLogin(json_request);
+				LoginController request_login = new LoginController();
+				json_response =  request_login.setLogin(json_request);
 				if(json_response.get("status").equals("200"))
 				{
 					FindID give_id_cookie = new FindID();
 					String id = null;
 					try 
 					{
-						id = give_id_cookie.ReturnIDbyConstraint(json_request.get("constraint").toString());
+						id = give_id_cookie.returnIDbyConstraint(json_request.get("constraint").toString());
 					} 
 					catch (SQLException e) 
 					{
-						out.print(servlet_exception.ReportErrorMessage(e.getMessage()));
+						out.print(servlet_messages.reportErrorMessage(e.getMessage()));
 						e.printStackTrace();
 					}
 					if(id != null) {
@@ -68,7 +68,7 @@ public class Login_com extends HttpServlet {
 					}
 					else
 					{
-						out.print(servlet_exception.ReportErrorMessage("error on create session"));
+						out.print(servlet_messages.reportErrorMessage("error on create session"));
 					}
 				}
 				else
@@ -78,13 +78,13 @@ public class Login_com extends HttpServlet {
 			}
 			else
 			{
-				out.print(servlet_exception.ReportErrorMessage("data json failed"));
+				out.print(servlet_messages.reportErrorMessage("data json failed"));
 			}
 		} 
 		catch (ParseException e) 
 		{
 			e.printStackTrace();
-			out.print(servlet_exception.ReportErrorMessage("invalid json"));
+			out.print(servlet_messages.reportErrorMessage("invalid json"));
 		}
 	}
 

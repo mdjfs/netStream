@@ -18,11 +18,11 @@ public class Sessions {
 		ResultSet rs;
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionSession.SelectWhereConstraintUnique("users", "email_users", constraint);
+			rs = ConnectionSession.selectWhereConstraintUnique("users", "email_users", constraint);
 		}
 		else
 		{
-			rs = ConnectionSession.SelectWhereConstraintUnique("users", "name_users", constraint);
+			rs = ConnectionSession.selectWhereConstraintUnique("users", "name_users", constraint);
 		}
 		int id = 0;
 		while(rs.next()) {
@@ -30,7 +30,7 @@ public class Sessions {
 		}
 		String SQL = "INSERT INTO sessions (id_users, date_time) VALUES ";
 		SQL += "("+id+",'"+Instant.now().toString()+"');";
-		ConnectionSession.Insert(SQL);
+		ConnectionSession.insert(SQL);
 		Pool.giveInstance();
 		
 	}
@@ -41,18 +41,18 @@ public class Sessions {
 		ResultSet rs;
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionSession.SelectWhereConstraintUnique("users", "email_users", constraint);
+			rs = ConnectionSession.selectWhereConstraintUnique("users", "email_users", constraint);
 		}
 		else
 		{
-			rs = ConnectionSession.SelectWhereConstraintUnique("users", "name_users", constraint);
+			rs = ConnectionSession.selectWhereConstraintUnique("users", "name_users", constraint);
 		}
 		int id = 0;
 		while(rs.next()) {
 			id = rs.getInt("id_users");
 		}
 		String SQL = "DELETE FROM sessions WHERE id_users="+id+";";
-		ConnectionSession.Delete(SQL);
+		ConnectionSession.delete(SQL);
 		Pool.giveInstance();
 		
 	}
@@ -64,11 +64,11 @@ public class Sessions {
 		ResultSet rs;
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionSession.SelectWhereConstraintUnique("users", "email_users", constraint);
+			rs = ConnectionSession.selectWhereConstraintUnique("users", "email_users", constraint);
 		}
 		else
 		{
-			rs = ConnectionSession.SelectWhereConstraintUnique("users", "name_users", constraint);
+			rs = ConnectionSession.selectWhereConstraintUnique("users", "name_users", constraint);
 		}
 		if(rs == null)
 			return false;
@@ -78,7 +78,7 @@ public class Sessions {
 		}
 		if (id == null)
 			return false;
-		rs = ConnectionSession.SelectWhereConstraintUnique("sessions", "id_users", id);
+		rs = ConnectionSession.selectWhereConstraintUnique("sessions", "id_users", id);
 		String time = null;
 		while(rs.next()) {
 			time = rs.getString("date_time");

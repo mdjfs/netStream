@@ -18,11 +18,11 @@ public class Auth {
 		ResultSet rs;
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionChecker.SelectWhereConstraintUnique("users", "email_users", constraint);
+			rs = ConnectionChecker.selectWhereConstraintUnique("users", "email_users", constraint);
 		}
 		else
 		{
-			rs = ConnectionChecker.SelectWhereConstraintUnique("users", "name_users", constraint);
+			rs = ConnectionChecker.selectWhereConstraintUnique("users", "name_users", constraint);
 		}
 		Pool.giveInstance();
 		while(rs.next()) {

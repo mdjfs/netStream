@@ -4,17 +4,17 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.ReportExceptions;
+import aux.JSONMessages;
 import resources.Pool;
 
-public class Logout {
+public class LogoutController {
 	
 	Sessions sessions_logout = new Sessions();
-	ReportExceptions exceptions_logout = new ReportExceptions();
+	JSONMessages messages_logout = new JSONMessages();
 	
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject SetLogout(JSONObject input_json) 
+	public JSONObject setLogout(JSONObject input_json) 
 	{
 		JSONObject output_json = new JSONObject();
 		try 
@@ -22,14 +22,11 @@ public class Logout {
 			if(sessions_logout.is_have_session(input_json.get("constraint").toString()))
 			{
 				sessions_logout.killSession(input_json.get("constraint").toString());
-				output_json.put("results", "Success");
-				output_json.put("message", "You are Log-Out");
-				output_json.put("status", "200");
-				return output_json;
+				return messages_logout.reportSuccessMessage("You are Log-Out");
 			}
 			else
 			{
-				return exceptions_logout.ReportErrorMessage("This session dont exist");
+				return messages_logout.reportErrorMessage("This session dont exist");
 			}
 			
 		} 
@@ -37,7 +34,7 @@ public class Logout {
 		{
 			e.printStackTrace();
 			Pool.giveInstance();
-			return exceptions_logout.ReportErrorMessage(e.getMessage());
+			return messages_logout.reportErrorMessage(e.getMessage());
 		}
 		
 	}

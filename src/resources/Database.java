@@ -25,15 +25,19 @@ public class Database {
 		}
 	}
 	
-	public void Insert(String SQL) throws SQLException {
+	public void insert(String SQL) throws SQLException {
 		statement.executeUpdate(SQL);
 	}
 	
-	public void Delete(String SQL) throws SQLException {
+	public void update(String SQL) throws SQLException {
 		statement.executeUpdate(SQL);
 	}
 	
-	public ResultSet SelectWhereConstraintUnique(String table, String constraint, String value) throws SQLException {
+	public void delete(String SQL) throws SQLException {
+		statement.executeUpdate(SQL);
+	}
+	
+	public ResultSet selectWhereConstraintUnique(String table, String constraint, String value) throws SQLException {
 		String SQL = "SELECT *FROM "+table+" WHERE "+constraint+"='"+value+"';";
 		return statement.executeQuery(SQL);
 	}

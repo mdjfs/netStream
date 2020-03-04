@@ -14,17 +14,17 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import aux.ReportExceptions;
-import manage.Delete;
-import manage.Update;
+import aux.JSONMessages;
+import manage.DeleteController;
+import manage.UpdateController;
 
 
 @WebServlet("/delete")
 @MultipartConfig
-public class Delete_com extends HttpServlet {
+public class Delete extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
-	private ReportExceptions servlet_exception = new ReportExceptions();
+	private JSONMessages servlet_messages = new JSONMessages();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -32,7 +32,7 @@ public class Delete_com extends HttpServlet {
 		String json = request.getParameter("json");
 		if (json==null)
 		{
-			out.print(servlet_exception.ReportErrorMessage("Dont exist parameter json"));
+			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
 		}
 		try 
 		{
@@ -42,19 +42,19 @@ public class Delete_com extends HttpServlet {
 			boolean is_password = json_request.containsKey("password");
 			if(is_id && is_password)
 			{
-				Delete request_delete = new Delete();
-				json_response =  request_delete.SetDelete(json_request);
+				DeleteController request_delete = new DeleteController();
+				json_response =  request_delete.setDelete(json_request);
 				out.print(json_response);
 			}
 			else
 			{
-				out.print(servlet_exception.ReportErrorMessage("data json failed"));
+				out.print(servlet_messages.reportErrorMessage("data json failed"));
 			}
 		} 
 		catch (ParseException e) 
 		{
 			e.printStackTrace();
-			out.print(servlet_exception.ReportErrorMessage("invalid json"));
+			out.print(servlet_messages.reportErrorMessage("invalid json"));
 		}
 	}
 

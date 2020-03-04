@@ -7,30 +7,30 @@ import java.sql.SQLException;
 import org.json.simple.JSONObject;
 
 import aux.HashPassword;
-import aux.ReportExceptions;
+import aux.JSONMessages;
 import aux.Sanitize;
 import resources.Database;
 import resources.Pool;
 
-public class Update {
+public class UpdateController {
 	
 	private Auth checker_islogin = new Auth();
 	private FindID find_user = new FindID();
 	private HashPassword hash_new_password = new HashPassword();
-	private ReportExceptions except_update = new ReportExceptions();
+	private JSONMessages messages_update = new JSONMessages();
 	private Sessions sessions_update = new Sessions();
 	private Sanitize sanitize_update = new Sanitize();
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject SetUpdate(JSONObject input_json) {
+	public JSONObject setUpdate(JSONObject input_json) {
 		JSONObject output_json = new JSONObject();
 		try {
-			String constraint = find_user.ReturnConstraintbyID(input_json.get("id").toString());
+			String constraint = find_user.returnConstraintbyID(input_json.get("id").toString());
 			boolean have_session = sessions_update.is_have_session(constraint);
 			if(!have_session)
-				return except_update.ReportErrorMessage("The user not have session");
+				return messages_update.reportErrorMessage("The user not have session");
 			if(constraint==null)
-				return except_update.ReportErrorMessage("Dont exists user by this id");
+				return messages_update.reportErrorMessage("Dont exists user by this id");
 			boolean[] status = checker_islogin.is_user_validate(constraint, 
 					input_json.get("password").toString());
 			if(status[0] && status[1]) {
@@ -42,35 +42,32 @@ public class Update {
 				boolean id_sanitize = sanitize_update.is_sanitize(id);
 				if(param_sanitize && value_sanitize && id_sanitize) 
 				{
-					UpdateParam(param_to_update, value_to_update, id);
-					output_json.put("results", "Success");
-					output_json.put("message", param_to_update + " is update");
-					output_json.put("status", "200");
-					return output_json;	
+					updateParam(param_to_update, value_to_update, id);
+					return messages_update.reportSuccessMessage(param_to_update + " is update");	
 				}
 				else
 				{
-					return except_update.ReportErrorMessage("You inputs not have the requeriments");
+					return messages_update.reportErrorMessage("You inputs not have the requeriments");
 				}
 			}
 			else
 			{
-				return except_update.ReportErrorMessage("The password is invalid !");
+				return messages_update.reportErrorMessage("The password is invalid !");
 			}
 		} catch (NoSuchAlgorithmException | NullPointerException | SQLException e) {
 			Pool.giveInstance();
 			e.printStackTrace();
-			return except_update.ReportErrorMessage(e.getMessage());
+			return messages_update.reportErrorMessage(e.getMessage());
 		}
 	}
 	
-	private void UpdateParam(String param, String value, String id) throws SQLException, NoSuchAlgorithmException {
+	private void updateParam(String param, String value, String id) throws SQLException, NoSuchAlgorithmException {
 		Database ConnectionUpdate = Pool.getInstance();
 		if(param.equals("password_users")) 
 		{
 			value = hash_new_password.ToHashPassword(value);
 		}
-		ConnectionUpdate.Update("UPDATE users SET "+param+"='"+value+"' WHERE id_users='"+id+"';");
+		ConnectionUpdate.update("UPDATE users SET "+param+"='"+value+"' WHERE id_users='"+id+"';");
 		Pool.giveInstance();
 	}
 }

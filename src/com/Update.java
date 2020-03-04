@@ -14,45 +14,48 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import aux.ReportExceptions;
-import manage.Logout;
+import aux.JSONMessages;
+import manage.UpdateController;
 
-@WebServlet("/logout")
+
+@WebServlet("/update")
 @MultipartConfig
-public class Logout_com extends HttpServlet {
+public class Update extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
-	private ReportExceptions servlet_exception = new ReportExceptions();
+	private JSONMessages servlet_messages = new JSONMessages();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setHeader("Access-Control-Allow-Origin","*");
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		String json = request.getParameter("json");
 		if (json==null)
 		{
-			out.print(servlet_exception.ReportErrorMessage("Dont exist parameter json"));
+			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
 		}
 		try 
 		{
 			JSONObject json_response;
 			JSONObject json_request = (JSONObject) parser.parse(json);
-			boolean is_constraint = json_request.containsKey("constraint");
-			if(is_constraint)
+			boolean is_id = json_request.containsKey("id");
+			boolean is_parameter = json_request.containsKey("parameter");
+			boolean is_value = json_request.containsKey("value");
+			boolean is_password = json_request.containsKey("password");
+			if(is_id && is_parameter && is_value && is_password)
 			{
-				Logout request_logout = new Logout();
-				json_response =  request_logout.SetLogout(json_request);
+				UpdateController request_update = new UpdateController();
+				json_response =  request_update.setUpdate(json_request);
 				out.print(json_response);
 			}
 			else
 			{
-				out.print(servlet_exception.ReportErrorMessage("data json failed"));
+				out.print(servlet_messages.reportErrorMessage("data json failed"));
 			}
 		} 
 		catch (ParseException e) 
 		{
 			e.printStackTrace();
-			out.print(servlet_exception.ReportErrorMessage("invalid json"));
+			out.print(servlet_messages.reportErrorMessage("invalid json"));
 		}
 	}
 
