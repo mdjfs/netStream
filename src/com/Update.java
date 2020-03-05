@@ -16,7 +16,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import aux.JSONMessages;
-import manage.DeleteController;
 import manage.UpdateController;
 
 
