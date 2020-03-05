@@ -14,7 +14,7 @@ import resources.Pool;
 
 public class UpdateController {
 	
-	private Auth checker_islogin = new Auth();
+	private Auth checker_login = new Auth();
 	private FindID find_user = new FindID();
 	private HashPassword hash_new_password = new HashPassword();
 	private JSONMessages messages_update = new JSONMessages();
@@ -22,30 +22,44 @@ public class UpdateController {
 	private Sanitize sanitize_update = new Sanitize();
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject setUpdate(JSONObject input_json) {
+	public JSONObject setUpdate(String id, JSONObject json_request) {
 		JSONObject output_json = new JSONObject();
 		try {
-			String constraint = find_user.returnConstraintbyID(input_json.get("id").toString());
-			boolean have_session = sessions_update.is_have_session(constraint);
-			if(!have_session)
-				return messages_update.reportErrorMessage("The user not have session");
-			if(constraint==null)
-				return messages_update.reportErrorMessage("Dont exists user by this id");
-			String id = input_json.get("id").toString();
-			String param_to_update = input_json.get("parameter").toString();
-			String value_to_update = input_json.get("value").toString();
-			boolean param_sanitize = sanitize_update.is_sanitize(param_to_update);
-			boolean value_sanitize = sanitize_update.is_sanitize(value_to_update);
-			boolean id_sanitize = sanitize_update.is_sanitize(id);
-			if(param_sanitize && value_sanitize && id_sanitize) 
+			String constraint = find_user.returnConstraintbyID(id);
+			boolean[] status = checker_login.is_user_validate(constraint, 
+					json_request.get("password").toString());
+			if(status[0] && status[1]) 
 			{
-				updateParam(param_to_update, value_to_update, id);
-				return messages_update.reportSuccessMessage(param_to_update + " is update");	
+				boolean have_session = sessions_update.is_have_session(constraint);
+				if(!have_session)
+					return messages_update.reportErrorMessage("The user not have session");
+				if(constraint==null)
+					return messages_update.reportErrorMessage("Dont exists user by this id");
+				boolean id_sanitize = sanitize_update.is_sanitize(id);
+				if(id_sanitize) 
+				{
+					String param_to_update = json_request.get("parameter").toString();
+					String value_to_update = json_request.get("value").toString();
+					updateParam(param_to_update, value_to_update, id);
+					return messages_update.reportSuccessMessage(param_to_update + " is update");	
+				}
+				else
+				{
+					return messages_update.reportErrorMessage("You inputs not have the requeriments");
+				}
 			}
-			else
+			if(!status[0])
 			{
-				return messages_update.reportErrorMessage("You inputs not have the requeriments");
+				String message = "The user dont exists, you arent registered ?";
+				return messages_update.reportErrorMessage(message);
 			}
+			if(!status[1])
+			{
+				String message = "The password is wrong !";
+				return messages_update.reportErrorMessage(message);
+			}
+			String message = "You find a easter egg.";
+			return messages_update.reportErrorMessage(message);
 		} 
 		catch (NoSuchAlgorithmException | NullPointerException | SQLException e) {
 			Pool.giveInstance();
@@ -56,6 +70,7 @@ public class UpdateController {
 	
 	private void updateParam(String param, String value, String id) throws SQLException, NoSuchAlgorithmException {
 		Database ConnectionUpdate = Pool.getInstance();
+		param += "_users";
 		if(param.equals("password_users")) 
 		{
 			value = hash_new_password.ToHashPassword(value);

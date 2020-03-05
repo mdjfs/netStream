@@ -22,43 +22,74 @@ public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
 	private JSONMessages servlet_messages = new JSONMessages();
+	
+			// Parametros que debe enviar el json:
+	private String json_keys_register[] = {"name", "email", "password"};
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setHeader("Access-Control-Allow-Origin","*");
+		/* Endpoint dedicado a Registrar Usuarios, lee un json por Raw */
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
+		String json = readRaw(request.getReader());
+		if (json==null)
+		{
+			out.print(servlet_messages.reportErrorMessage("Unfound json"));
+		}
+		else
+		{
+			try 
+			{
+				JSONObject json_response;
+				JSONObject json_request = (JSONObject) parser.parse(json);
+				boolean is_all_keys = is_all_keys(json_request);
+				if(is_all_keys)
+				{
+					RegisterController request_register = new RegisterController();
+					json_response =  request_register.setRegister(json_request);
+					out.print(json_response);
+				}
+				else
+				{
+					out.print(servlet_messages.reportErrorMessage("Keys json failed, you need this keys: " + say_keys()));
+				}
+			} 
+			catch (ParseException e) 
+			{
+				e.printStackTrace();
+				out.print(servlet_messages.reportErrorMessage("invalid json"));
+			}
+		}
+	}
+	
+	private String say_keys() {
+		/* metodo que devuelve el atributo con arreglo de llaves en string */
+		String keys = "";
+		for(int i=0; i < json_keys_register.length ; i++) {
+			if(i == json_keys_register.length - 1)
+				keys += json_keys_register[i];
+			else
+				keys += json_keys_register[i]+", ";
+		}
+		return keys;
+	}
+	
+	private Boolean is_all_keys(JSONObject json_request) {
+		/* metodo que verifica si todas las llaves del servlet estan en el json */
+		for(int i=0; i < json_keys_register.length ; i++) {
+			if( ! json_request.containsKey(json_keys_register[i]) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private String readRaw(BufferedReader buffer) throws IOException {
+		/* metodo que lee texto enviado en raw y lo devuelve como string */
 		StringBuffer buffertext = new StringBuffer();
-		BufferedReader reader = request.getReader();
+		BufferedReader reader = buffer;
 		String line = "";
 		while ((line = reader.readLine()) != null)
 			buffertext.append(line);
-		String json = buffertext.toString();
-		if (json==null)
-		{
-			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
-		}
-		try 
-		{
-			JSONObject json_response;
-			JSONObject json_request = (JSONObject) parser.parse(json);
-			boolean is_name = json_request.containsKey("name");
-			boolean is_password = json_request.containsKey("password");
-			boolean is_email = json_request.containsKey("email");
-			if(is_name && is_password && is_email)
-			{
-				RegisterController request_register = new RegisterController();
-				json_response =  request_register.setRegister(json_request);
-				out.print(json_response);
-			}
-			else
-			{
-				out.print(servlet_messages.reportErrorMessage("data json failed"));
-			}
-		} 
-		catch (ParseException e) 
-		{
-			e.printStackTrace();
-			out.print(servlet_messages.reportErrorMessage("invalid json"));
-		}
+		return buffertext.toString();
 	}
 }

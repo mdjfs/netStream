@@ -17,31 +17,99 @@ import org.json.simple.parser.ParseException;
 
 import aux.JSONMessages;
 import manage.DeleteController;
-import manage.LogoutController;
 
 
 @WebServlet("/delete")
 public class Delete extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	private JSONParser parser = new JSONParser();
 	private JSONMessages servlet_messages = new JSONMessages();
 
+		//Parametros que debe contener el json:
+	private String json_keys_delete[] = {"password"};
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/* Endpoint que se encarga de borrar el usuario, lee un json por raw */
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		JSONObject json_response;
-		HttpSession session_logout = request.getSession(false);
-		String id = (String) session_logout.getAttribute("ID");
-		if(id != null)
+		String json = readRaw(request.getReader());
+		if (json==null)
 		{
-			DeleteController request_delete = new DeleteController();
-			json_response =  request_delete.setDelete(id);
-			session_logout.removeAttribute("ID");
-			out.print(json_response);
+			out.print(servlet_messages.reportErrorMessage("Unfound json"));
 		}
 		else
 		{
-			out.print(servlet_messages.reportErrorMessage("You aren't log-in !"));
+			try 
+			{
+				JSONObject json_response;
+				JSONObject json_request = (JSONObject) parser.parse(json);
+				boolean is_all_keys = is_all_keys(json_request);
+				if(is_all_keys)
+				{
+					HttpSession session_delete = request.getSession(false);
+					if( session_delete != null ) {
+						String id = (String) session_delete.getAttribute("ID");
+						if(id != null)
+						{
+							DeleteController request_delete = new DeleteController();
+							json_response =  request_delete.setDelete(id, json_request);
+							session_delete.removeAttribute("ID");
+							out.print(json_response);
+						}
+						else
+						{
+							out.print(servlet_messages.reportErrorMessage("You aren't log-in !"));
+						}
+					}
+					else
+					{
+						out.print(servlet_messages.reportErrorMessage("You not have session"));
+					}
+				}
+				else
+				{
+					out.print(servlet_messages.reportErrorMessage("Keys json failed, you need this keys: " + say_keys()));
+				}
+			} 
+			catch (ParseException e) 
+			{
+				e.printStackTrace();
+				out.print(servlet_messages.reportErrorMessage("invalid json"));
+			}
 		}
 	}
+	
+	
+	private String say_keys() {
+		/* metodo que devuelve el atributo con arreglo de llaves en string */
+		String keys = "";
+		for(int i=0; i < json_keys_delete.length ; i++) {
+			if(i == json_keys_delete.length - 1)
+				keys += json_keys_delete[i];
+			else
+				keys += json_keys_delete[i]+", ";
+		}
+		return keys;
+	}
+	
+	private Boolean is_all_keys(JSONObject json_request) {
+		/* metodo que verifica si todas las llaves del servlet estan en el json */
+		for(int i=0; i < json_keys_delete.length ; i++) {
+			if( ! json_request.containsKey(json_keys_delete[i]) ) {
+				return false;
+			}
+		}
+		return true;
+	}
 
+	private String readRaw(BufferedReader buffer) throws IOException {
+		/* metodo que lee texto enviado en raw y lo devuelve como string */
+		StringBuffer buffertext = new StringBuffer();
+		BufferedReader reader = buffer;
+		String line = "";
+		while ((line = reader.readLine()) != null)
+			buffertext.append(line);
+		return buffertext.toString();
+	}
 }
