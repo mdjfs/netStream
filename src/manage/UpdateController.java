@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import org.json.simple.JSONObject;
 
 import aux.HashPassword;
-import aux.JSONMessages;
+import aux.JSONManage;
 import aux.Sanitize;
 import resources.Database;
 import resources.Pool;
@@ -17,7 +17,7 @@ public class UpdateController {
 	private Auth checker_login = new Auth();
 	private FindID find_user = new FindID();
 	private HashPassword hash_new_password = new HashPassword();
-	private JSONMessages messages_update = new JSONMessages();
+	private JSONManage messages_update = new JSONManage();
 	private Sessions sessions_update = new Sessions();
 	private Sanitize sanitize_update = new Sanitize();
 	

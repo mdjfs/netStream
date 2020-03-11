@@ -12,13 +12,13 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONMessages;
+import aux.JSONManage;
 import manage.LogoutController;
 
 @WebServlet("/logout")
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private JSONMessages servlet_messages = new JSONMessages();
+	private JSONManage servlet_messages = new JSONManage();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");

@@ -7,7 +7,7 @@ import java.time.Instant;
 import org.json.simple.JSONObject;
 
 import aux.HashPassword;
-import aux.JSONMessages;
+import aux.JSONManage;
 import aux.Sanitize;
 import resources.Pool;
 import resources.Database;
@@ -15,7 +15,7 @@ import resources.Database;
 public class RegisterController {
 
 	JSONObject output_json = new JSONObject();
-	JSONMessages messages_register = new JSONMessages();
+	JSONManage messages_register = new JSONManage();
 	HashPassword hashing_register = new HashPassword();
 	Sanitize sanitize_register = new Sanitize();
 	

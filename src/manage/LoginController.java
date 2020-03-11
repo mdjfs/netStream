@@ -5,12 +5,12 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONMessages;
+import aux.JSONManage;
 import resources.Pool;
 
 public class LoginController {
 	private Auth checker_login = new Auth();
-	private JSONMessages messages_login = new JSONMessages();
+	private JSONManage messages_login = new JSONManage();
 	private Sessions sessions_login = new Sessions();
 	
 	

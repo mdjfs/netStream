@@ -1,6 +1,4 @@
 package com;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -15,7 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import aux.JSONMessages;
+import aux.JSONManage;
 import manage.DeleteController;
 
 
@@ -24,7 +22,7 @@ public class Delete extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private JSONParser parser = new JSONParser();
-	private JSONMessages servlet_messages = new JSONMessages();
+	private JSONManage servlet_messages = new JSONManage();
 
 		//Parametros que debe contener el json:
 	private String json_keys_delete[] = {"password"};
@@ -33,7 +31,7 @@ public class Delete extends HttpServlet {
 		/* Endpoint que se encarga de borrar el usuario, lee un json por raw */
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		String json = readRaw(request.getReader());
+		String json = servlet_messages.readRaw(request.getReader());
 		if (json==null)
 		{
 			out.print(servlet_messages.reportErrorMessage("Unfound json"));
@@ -44,7 +42,7 @@ public class Delete extends HttpServlet {
 			{
 				JSONObject json_response;
 				JSONObject json_request = (JSONObject) parser.parse(json);
-				boolean is_all_keys = is_all_keys(json_request);
+				boolean is_all_keys = servlet_messages.is_all_keys(json_request, json_keys_delete);
 				if(is_all_keys)
 				{
 					HttpSession session_delete = request.getSession(false);
@@ -69,7 +67,7 @@ public class Delete extends HttpServlet {
 				}
 				else
 				{
-					out.print(servlet_messages.reportErrorMessage("Keys json failed, you need this keys: " + say_keys()));
+					out.print(servlet_messages.reportErrorMessage("Keys json failed, you need this keys: " + servlet_messages.say_keys(json_keys_delete)));
 				}
 			} 
 			catch (ParseException e) 
@@ -78,38 +76,5 @@ public class Delete extends HttpServlet {
 				out.print(servlet_messages.reportErrorMessage("invalid json"));
 			}
 		}
-	}
-	
-	
-	private String say_keys() {
-		/* metodo que devuelve el atributo con arreglo de llaves en string */
-		String keys = "";
-		for(int i=0; i < json_keys_delete.length ; i++) {
-			if(i == json_keys_delete.length - 1)
-				keys += json_keys_delete[i];
-			else
-				keys += json_keys_delete[i]+", ";
-		}
-		return keys;
-	}
-	
-	private Boolean is_all_keys(JSONObject json_request) {
-		/* metodo que verifica si todas las llaves del servlet estan en el json */
-		for(int i=0; i < json_keys_delete.length ; i++) {
-			if( ! json_request.containsKey(json_keys_delete[i]) ) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private String readRaw(BufferedReader buffer) throws IOException {
-		/* metodo que lee texto enviado en raw y lo devuelve como string */
-		StringBuffer buffertext = new StringBuffer();
-		BufferedReader reader = buffer;
-		String line = "";
-		while ((line = reader.readLine()) != null)
-			buffertext.append(line);
-		return buffertext.toString();
 	}
 }

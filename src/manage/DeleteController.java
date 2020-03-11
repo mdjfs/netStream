@@ -5,14 +5,14 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONMessages;
+import aux.JSONManage;
 import aux.Sanitize;
 import resources.Database;
 import resources.Pool;
 
 public class DeleteController {
 	private FindID find_user = new FindID();
-	private JSONMessages message_delete = new JSONMessages();
+	private JSONManage message_delete = new JSONManage();
 	private Sessions sessions_delete = new Sessions();
 	private Sanitize sanitize_delete = new Sanitize();
 	private Auth checker_login = new Auth();

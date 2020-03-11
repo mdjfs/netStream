@@ -1,8 +1,12 @@
 package manage;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.json.simple.JSONObject;
 
 import aux.HashPassword;
 import resources.Database;
@@ -32,5 +36,5 @@ public class Auth {
 		}
 		return new boolean[] {false, false};
 	}
-
+	
 }
