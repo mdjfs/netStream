@@ -15,14 +15,15 @@ public class Decode {
 	public static void main(String[] args) throws IOException {
 		
 		ArrayList<String> parts = new ArrayList<String>();
-		File fichero = new File("/home/mdjfs/Descargas/facebook.png");
+		File fichero = new File("/home/mdjfs/examples.desktop");
 		FileInputStream ficheroStream = new FileInputStream(fichero);
 		byte data[] = new byte[(int)fichero.length()];
 		ficheroStream.read(data);
 		int pointer_reader = 0;
 		Encoder encoder = Base64.getEncoder();
 		Decoder decoder = Base64.getDecoder();
-
+		int totalparts = (int)fichero.length() / 1024;
+		int actualpart = 0;
 		FileWriter fw = new FileWriter("/home/mdjfs/hola.txt");
 		while(pointer_reader < data.length)
 		{
@@ -32,9 +33,11 @@ public class Decode {
 				{
 					part[i] = data[pointer_reader];
 					if(i==1023) {
-							fw.write("{\n\"name\":\"pruebajeje22\",\n\"type_thumbnail\":\"png\",\n\"type_video\":\"mp4\",\n\"part_video\":\"\",\n\"part_thumbnail\":\""+encoder.encodeToString(part)+"\",\n\"size_video\":\"\",\n\"size_thumbnail\":\"95224\"\n}\n");
+							actualpart++;
+							System.out.println(encoder.encodeToString(part).length());
 							
-							System.out.println("{\n\"name\":\"pruebajeje\",\n\"type_thumbnail\":\"png\",\n\"type_video\":\"mp4\",\n\"part_video\":\"\",\n\"part_thumbnail\":\""+encoder.encodeToString(part)+"\",\n\"size_video\":\"\",\n\"size_thumbnail\":\"95224\"\n}\n");
+							fw.write("{\n\"name\":\"otraprueba\",\n\"type_thumbnail\":\"png\",\n\"type_video\":\"mp4\",\n\"part_video\":\"\",\n\"part_thumbnail\":\""+"("+actualpart+"/"+totalparts+")"+encoder.encodeToString(part)+"\"\n}\n");
+							//System.out.println(trama.substring(0, 5) + trama.substring(5));
 					}
 					pointer_reader++;
 				}

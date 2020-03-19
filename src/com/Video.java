@@ -25,7 +25,7 @@ public class Video extends HttpServlet {
 	private JSONManage json_servlet = new JSONManage();
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String[] json_keys_video = {"name","type_thumbnail","type_video","part_video","part_thumbnail", "size_video", "size_thumbnail"};
+		String[] json_keys_video = {"name","type_thumbnail","type_video","part_video","part_thumbnail"};
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		String json = json_servlet.readRaw(request.getReader());
