@@ -1,4 +1,4 @@
-package aux;
+package helper;
 
 public class Sanitize {
 	

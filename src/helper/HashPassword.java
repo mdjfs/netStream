@@ -1,4 +1,4 @@
-package aux;
+package helper;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

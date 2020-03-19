@@ -13,7 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import aux.JSONManage;
+import helper.JSONManage;
 import manage.RegisterController;
 
 @WebServlet("/register")

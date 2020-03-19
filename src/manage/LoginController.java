@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONManage;
+import helper.JSONManage;
 import resources.Pool;
 
 public class LoginController {
@@ -14,9 +14,7 @@ public class LoginController {
 	private Sessions sessions_login = new Sessions();
 	
 	
-	@SuppressWarnings("unchecked")
 	public JSONObject setLogin(JSONObject input_json) {
-		JSONObject output_json = new JSONObject();
 		try 
 		{
 			boolean[] status = checker_login.is_user_validate(input_json.get("constraint").toString(), 

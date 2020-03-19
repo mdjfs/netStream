@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONManage;
+import helper.JSONManage;
 import resources.Pool;
 
 public class LogoutController {
@@ -13,7 +13,6 @@ public class LogoutController {
 	JSONManage messages_logout = new JSONManage();
 	
 	
-	@SuppressWarnings("unchecked")
 	public JSONObject setLogout(String id) 
 	{
 		FindID Logout_ID = new FindID();

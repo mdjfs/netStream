@@ -10,6 +10,5 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JsonSimple"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDBC"/>
-	<classpathentry kind="lib" path="/home/marcos/Documentos/descarga/commons-io-2.6.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

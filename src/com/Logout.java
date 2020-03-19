@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONManage;
+import helper.JSONManage;
 import manage.LogoutController;
 
 @WebServlet("/logout")

@@ -1,64 +1,81 @@
 package manage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
-
-import javax.servlet.http.Part;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONManage;
+import helper.JSONManage;
 
-import org.apache.commons.io.IOUtils;
 
 
 public class VideoController {
-	private String URI = "";
+	private String URI = "/home/mdjfs/Documentos/netStreamSources";
 	private FindID find_user = new FindID();
 	private JSONManage messages_videocontroller = new JSONManage();
 	
-	private void writeFile(File directory, Part part, String Type, String Name) throws IOException {
-		FileOutputStream site_out = new FileOutputStream(directory + Name + "." + Type);
-		InputStream part_of_video = part.getInputStream();
-		byte[] videoAsByteArray = IOUtils.toByteArray(part_of_video);
-		site_out.write(videoAsByteArray);
+	private String write(String user, String name, String type, String part, String size) throws IOException {
+		File in = new File(URI + "/" + user );
+		in.mkdirs();
+		FileOutputStream output = new FileOutputStream(in + "/" + name + "." + type, true);
+		Decoder decoder = Base64.getDecoder();
+		output.write(decoder.decode(part));
+		output.close();
+		File sizefile = new File(URI + "/" + user + "/" + name + "." + type);
+		return (sizefile.length() / Float.parseFloat(size)) * 100 + "%";
 	}
 	
-	public JSONObject upload(String id, Part video, Part thumbnail, JSONObject json_request) {
-		try 
+	public JSONObject upload(String id, JSONObject json_request) {
+		if(id != null)
 		{
-			File directory = new File(URI + "/" + find_user.returnConstraintbyID(id) + "/");
-			if(directory.mkdirs())
+			try 
 			{
-				try 
+				String user = find_user.returnConstraintbyID(id);
+				String name = json_request.get("name").toString();
+				String type_video = json_request.get("type_video").toString();
+				String type_thumbnail = json_request.get("type_thumbnail").toString();
+				String part_video = json_request.get("part_video").toString();
+				String part_thumbnail = json_request.get("part_thumbnail").toString();
+				String size_video = json_request.get("size_video").toString();
+				String size_thumbnail = json_request.get("size_thumbnail").toString();
+				if(part_video.equals(""))
 				{
-					String name_of_thumbnail = json_request.get("name_thumbnail").toString();
-					String name_of_video = json_request.get("name_video").toString();
-					String type_video = json_request.get("type_video").toString();
-					String type_thumbnail = json_request.get("type_thumbnail").toString();
-					writeFile(directory, video,  type_video, name_of_video);
-					writeFile(directory, thumbnail, type_thumbnail, name_of_thumbnail);
-					return messages_videocontroller.reportSuccessMessage("Movie "+name_of_video+" upload successfully");
-				} 
-				catch (IOException e) 
-				{
-					e.printStackTrace();
-					return messages_videocontroller.reportErrorMessage(e.getMessage());
-				} 
-			}
-			else
+					if(part_thumbnail.equals("")) {
+						return messages_videocontroller.reportErrorMessage("not have parts");
+					}
+					else {
+						return messages_videocontroller.reportSuccessMessage("thumbnail percent:" + 
+												write(user, name, type_thumbnail, part_thumbnail, size_thumbnail));
+					}
+				}
+				else {
+					if(part_thumbnail.equals("")) {
+						return messages_videocontroller.reportSuccessMessage("video percent:" +	
+												write(user, name, type_video, part_video, size_video));
+					}
+					else {
+						return messages_videocontroller.reportSuccessMessage("video percent:" + 
+												write(user, name, type_video, part_video, size_video) +
+												"thumbnail percent:" + 
+												write(user, name, type_thumbnail, part_thumbnail, size_thumbnail));
+					}
+				}
+				
+			} 
+			catch (SQLException | IOException e) 
 			{
-				return messages_videocontroller.reportErrorMessage("Error with directory");
+				e.printStackTrace();
+				return messages_videocontroller.reportErrorMessage(e.getMessage());
 			}
-		} 
-		catch (SQLException e1) 
-		{
-			e1.printStackTrace();
-			return messages_videocontroller.reportErrorMessage(e1.getMessage());
 		}
+		else 
+		{
+			return messages_videocontroller.reportErrorMessage("You aren't log-In");
+		}
+		
 	}
 }

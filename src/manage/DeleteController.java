@@ -5,8 +5,8 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONManage;
-import aux.Sanitize;
+import helper.JSONManage;
+import helper.Sanitize;
 import resources.Database;
 import resources.Pool;
 

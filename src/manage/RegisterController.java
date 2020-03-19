@@ -6,9 +6,9 @@ import java.time.Instant;
 
 import org.json.simple.JSONObject;
 
-import aux.HashPassword;
-import aux.JSONManage;
-import aux.Sanitize;
+import helper.HashPassword;
+import helper.JSONManage;
+import helper.Sanitize;
 import resources.Pool;
 import resources.Database;
 
@@ -24,7 +24,6 @@ public class RegisterController {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public JSONObject setRegister(JSONObject input_json) 
 	{
 		if(!(sanitize_register.is_sanitize(input_json.get("name").toString()) &&

@@ -1,14 +1,13 @@
 package manage;
 
 import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.HashPassword;
-import aux.JSONManage;
-import aux.Sanitize;
+import helper.HashPassword;
+import helper.JSONManage;
+import helper.Sanitize;
 import resources.Database;
 import resources.Pool;
 
@@ -21,9 +20,7 @@ public class UpdateController {
 	private Sessions sessions_update = new Sessions();
 	private Sanitize sanitize_update = new Sanitize();
 	
-	@SuppressWarnings("unchecked")
 	public JSONObject setUpdate(String id, JSONObject json_request) {
-		JSONObject output_json = new JSONObject();
 		try {
 			String constraint = find_user.returnConstraintbyID(id);
 			boolean[] status = checker_login.is_user_validate(constraint, 
