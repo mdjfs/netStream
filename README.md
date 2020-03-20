@@ -7,6 +7,8 @@ comunica con el frontend estrictamente con jsons
 En general, la aplicacion se diseño para que sea jerarquice errores, de tal manera que el manejo de jsons con postman
 se hace comodo, no tienes que aprenderte las llaves que necesita cada json, como dicen por ahi... Plug and Play ! 
 
+Por supuesto necesita la base de datos con las tablas respectivas (proximamente se anexa archivo SQL architect)
+
 
 # <h4>¿Y entonces, cómo pruebo el backend?</h4>
 Debido a que el frontend se encuentra en desarrollo, actualmente hay algunas funcionalidades pero no todas... Sin embargo, como
