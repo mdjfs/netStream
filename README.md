@@ -18,6 +18,7 @@ segun sea, y enviar jsons via raw, no tienes *por qué* saberte las llaves del j
 
 Cuando envies un json en raw, envia un json vacio... Algo así: 
 {}
+Esto te respondera con un error y te informara de las llaves
 
 <h3>Login</h3>
 
