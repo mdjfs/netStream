@@ -1,8 +1,13 @@
 package com;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -19,13 +24,49 @@ import helper.JSONManage;
 import manage.VideoController;
 
 @WebServlet("/video")
-public class Video extends HttpServlet {
+public class Load extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
 	private JSONManage json_servlet = new JSONManage();
 	
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		    String user = request.getParameter("user");
+		    String name = request.getParameter("name");
+		    String type = "";
+		    if(name.contains(".mp4"))
+		    	type = "video/mp4";
+		    if(name.contains(".png"))
+		    	type = "image/x-png";
+		    if(name.contains(".jpg") || name.contains(".jpeg"))
+		    	type = "image/jpeg";
+		    if(!type.equals(""))
+		    {
+		    	String dir = "/"+user+"/"+name;
+			    String URL = "/home/mdjfs/Documentos/netStreamSources"+dir;
+			    InputStream input = new FileInputStream(URL);
+			    //response.setContentType("video/quicktime"); //Use this for VLC player
+			    response.setContentType(type);
+			    response.setHeader("Content-Disposition", "inline; filename=\""+ name + "\"");
+			    OutputStream output = response.getOutputStream();
+			    if(output != null && input != null) {
+			    	byte[] buffer = new byte[2096];
+				    int read = 0;
+				    while ((read = input.read(buffer)) != -1) {
+				      output.write(buffer, 0, read);
+				    }
+				    input.close();
+				    output.flush();
+				    output.close();
+			    }
+		    }
+
+
+
+		  }
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String[] json_keys_video = {"name","type_thumbnail","type_video","part_video","part_thumbnail"};
+		String[] json_keys_video = {"name","type","part"};
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		String json = json_servlet.readRaw(request.getReader());

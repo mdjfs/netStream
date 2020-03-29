@@ -13,9 +13,10 @@ import java.io.IOException;
 public class Decode {
 
 	public static void main(String[] args) throws IOException {
-		
+		int MB = 1024 * 1024;
+		int framesize = MB * 50;
 		ArrayList<String> parts = new ArrayList<String>();
-		File fichero = new File("/home/mdjfs/examples.desktop");
+		File fichero = new File("/home/mdjfs/2-Alicization.mp4");
 		FileInputStream ficheroStream = new FileInputStream(fichero);
 		byte data[] = new byte[(int)fichero.length()];
 		ficheroStream.read(data);
@@ -27,12 +28,12 @@ public class Decode {
 		FileWriter fw = new FileWriter("/home/mdjfs/hola.txt");
 		while(pointer_reader < data.length)
 		{
-			byte[] part = new byte[1024];
-			for(int i = 0 ; i < 1024 ; i ++ ) {
+			byte[] part = new byte[framesize];
+			for(int i = 0 ; i < framesize ; i ++ ) {
 				if(pointer_reader != data.length)
 				{
 					part[i] = data[pointer_reader];
-					if(i==1023) {
+					if(i==framesize-1) {
 							actualpart++;
 							System.out.println(encoder.encodeToString(part).length());
 							

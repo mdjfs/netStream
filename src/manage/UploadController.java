@@ -11,7 +11,7 @@ import helper.Sanitize;
 import resources.Database;
 import resources.Pool;
 
-public class UpdateController {
+public class UploadController {
 	
 	private Auth checker_login = new Auth();
 	private FindID find_user = new FindID();

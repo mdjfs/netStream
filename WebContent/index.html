@@ -1,8 +1,35 @@
 <html>
+    <head>
+        <title>Welcome to NetStream</title>
+        <script src="js/signin.js"></script>
+        <script src="js/register.js"></script>
+        <link rel="stylesheet" href="styles/index.css">
+    </head>
+    <body>
+        <div class="toolbar">
+            <p class="title">A small app to view movies</p>
+            <img class="logo" src="sources/logo.png"/>
+            <a href="login.html"><button class="whitebutton">sign in</button></a>
+        </div>
+        <p id="invitation1" class="invitation">Watch the best videos<br/>in your house comfort</p> <br/>
+        <img class="imgview" src="sources/watch.png"/> 
+        <p id="invitation2" class="invitation">So... What are u waiting for start?</p> 
+        <div class="register">
 
-<head>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="javascript/index.js"></script>
-</head>
+            <h3 class="registertext">Register now ! it's free</h3>
+            <form>
+                Email <br/>
+                <input id="fieldconstraint" type="text" name="email" placeholder="email">  <br/>
+                Username <br/>
+                <input id="fieldusername" type="text" name="username" placeholder="username"> <br/>
+                Password <br/>
+                <input id="fieldpassword" type="password" name="password" placeholder="password"> <br/>
+            </form>
+            <button  class="pinkbutton" onclick=sendRegister()>Register</button>
 
+            <p id="errors" class="errors"></p>
+        </div>
+        
+
+    </body>
 </html>
