@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css?family=Baloo+Da+2&display=swap');
+.infoprofile{
+    position: absolute;
+    left:20%;
+    height:70%;
+    top:20%;
+    background-image: url('backgrounds/whitetexture.jpeg');
+    width: 60%;
+    border-radius: 10%;
+}
+.titleinfo{
+    position: relative;
+    margin-top: 5%;
+    text-align: center;
+    font-size: 3vw;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+#editphoto{
+    top: -4%;
+    left: -5.5%;
+}
+.edit{
+    background-image: url('backgrounds/edit.png');
+    background-size: 100% 100%;
+    background-color: transparent;
+    border: none;
+    width:4%;
+    height:4%;
+    position:relative;
+    opacity:0.7;
+}
+.exit{
+    background-image: url('backgrounds/exit.png');
+    background-size: 100% 100%;
+    border: none;
+    width:8%;
+    height:10%;
+    position:absolute;
+    left:92%;
+    background-color: transparent;
+}
+.exit:hover{
+    width:10%;
+    height:12%;
+    left:90%;
+}
+.edit:hover{
+    opacity:0.8;
+}
+#profileimg{
+    width:20%;
+    height: 40%;
+    position:relative;
+    margin-left:5%;
+}
+.editphoto{
+    background-color:aqua;
+    opacity: 0.3;
+    position:absolute;
+    left:35%;
+    top:40%;
+    width:30%;
+    height:30%;
+    font-family: 'Baloo Da 2', sans-serif;
+    color: black;
+    text-align: center;
+    font-size: 2vw;
+    border-radius: 10%;
+    -webkit-box-shadow: 1px 10px 80px 6px rgba(0,0,0,0.75);
+    -moz-box-shadow: 1px 10px 80px 6px rgba(0,0,0,0.75);
+    box-shadow: 1px 10px 80px 6px rgba(0,0,0,0.75);
+}
+#file{
+    margin-top:20%;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: center;
+    position: relative;
+}
+#progresscontainer{
+    background-color: black;
+    width: 80%;
+    height: 10%;
+    left: 8%;
+    top: 20%;
+    position: relative;
+    padding: 2% 2% 2% 2%;
+}
+#progress{
+    background-color: white;
+    height: 100%;
+    width: 0%;
+}
+#editemail{
+    left:40%;
+    top: -40%;
+}
+#changeusername{
+    position:relative;
+    top:-115%;
+    left:40%;
+}
+#changeemail{
+    position:relative;
+    top:-90%;
+    left:40%;
+}
+#editusername{
+    top: -40%;
+    left:40%;
+}
+.keydata{
+    font-family: 'Baloo Da 2', sans-serif;
+    font-weight: bolder;
+    position: relative;
+    left: 50%;
+    top: -60%;
+    font-size: 3vw;
+}
+.valuedata{
+    font-family: 'Baloo Da 2', sans-serif;
+    position: relative;
+    left: 50%;
+    top: -70%;
+    font-size: 2vw;
+}

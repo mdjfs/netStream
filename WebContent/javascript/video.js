@@ -107,7 +107,6 @@ function getBase64(buffer, fileSize){
 }
 
 function manage_response(response){
-    /* muestra el resultado que mando el servidor */
     number++;
     if(number < parts.length){
         sendfiles();
@@ -117,7 +116,6 @@ function manage_response(response){
 
 
 function sendfiles(){
-    /* Envia un JSON al servidor */
     var name = document.getElementById("name");
     var myHeaders = new Headers();
     var raw = '{"name":"'+name.value+'","type":"'+type+'","part":"'+parts[number]+'"}';

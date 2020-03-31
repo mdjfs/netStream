@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css?family=Baloo+Da+2&display=swap');
+#constraint{
+    font-family: 'Baloo Da 2', sans-serif;
+    position: absolute;
+    left: 80%;
+    margin-top: 1%;
+    font-size: 1.7vw;
+}
+#profile{
+    width: 5%;
+    height: 70%;
+    top:10%;
+    position:absolute;
+    left: 74%;
+    border-radius: 15px;
+}
+.navigation{
+    background-color: rgba(255,255,255,0.8);
+    top:-40%;
+    height:50%;
+    width: 20%;
+    left: 70%;
+    position:fixed;
+    border-radius: 5px;
+    -webkit-box-shadow: -5px 51px 85px 35px rgba(255,148,255,0.5);
+    -moz-box-shadow: -5px 51px 85px 35px rgba(255,148,255,0.5);
+    box-shadow: -5px 51px 85px 35px rgba(255,148,255,0.5);
+}
+.navigationbutton{
+    background: none;
+    margin-top: 5%;
+    height: 10%;
+    width:100%;
+    margin-bottom: 5%;
+    font-family: 'Baloo Da 2', sans-serif;
+    font-size: 1.7vw;
+    position:relative;
+    border: none;
+}
+.navigationbutton:hover{
+    color: rgba(255,148,255,0.7);
+}
