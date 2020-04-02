@@ -14,7 +14,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import helper.JSONManage;
-import manage.UploadController;
+import manage.UpdateController;
 
 
 @WebServlet("/update")
@@ -48,7 +48,7 @@ public class Update extends HttpServlet {
 						String id = (String) session_update.getAttribute("ID");
 						if(id != null)
 						{
-							UploadController request_update = new UploadController();
+							UpdateController request_update = new UpdateController();
 							json_response =  request_update.setUpdate(id, json_request);
 							out.print(json_response);
 						}

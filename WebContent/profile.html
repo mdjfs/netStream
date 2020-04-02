@@ -12,12 +12,23 @@
 
         <div class="infoprofile">
             <h1 class="titleinfo" >My Profile</h1>
-            <img id="profileimg">
-            <button id="editphoto" class="edit"></button></img><br/>
-            <button id="editusername" class="edit"></button></img><br/><p class="keydata">username:</p><p id="username" class="valuedata"></p>
-            <button id="editemail" class="edit"></button></img><br/><p class="keydata">email:</p><p id="email" class="valuedata"></p>
-            <input type="text" id="changeusername" hidden>
-            <input type="text" id="changeemail" hidden>
+            <div id="infoimg">
+                <img id="profileimg">
+                <button id="editphoto" class="edit"></button></img>
+            </div>
+            <div id="infodata">
+                <p class="keydata">username:
+                    <br/>
+                    <button id="editusername" class="edit"></button>
+                </p>
+                <p id="username" class="valuedata"></p>
+                <input type="text" id="changeusername" hidden><button id="checkuser" class="check" hidden></button></input>
+                <p class="keydata">
+                    email:<br/>
+                    <button id="editemail" class="edit"></button></p>
+                <p id="email" class="valuedata"></p>
+                <input type="text" id="changeemail" hidden><button id="checkemail" class="check" hidden></button>
+            </div>
         </div>
         <div id="boxedit" class="editphoto" hidden>
             <button id="exitbox" class="exit"></button>
@@ -27,6 +38,7 @@
                 </div>
             </div>
             <input id="file" type="file">
+            <input id="checkpass" type="password" name="password" placeholder="password" hidden>
             <p id="status">Select a pic</p>
         </div>
         <div class="toolbar">

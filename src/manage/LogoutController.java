@@ -5,12 +5,11 @@ import java.sql.SQLException;
 import org.json.simple.JSONObject;
 
 import helper.JSONManage;
-import resources.Pool;
 
 public class LogoutController {
 	
-	Sessions sessions_logout = new Sessions();
-	JSONManage messages_logout = new JSONManage();
+	Sessions sessions = new Sessions();
+	JSONManage messages = new JSONManage();
 	
 	
 	public JSONObject setLogout(String id) 
@@ -22,26 +21,25 @@ public class LogoutController {
 		} 
 		catch (SQLException e1) {
 			e1.printStackTrace();
-			return messages_logout.reportErrorMessage(e1.getMessage());
+			return messages.reportErrorMessage(e1.getMessage());
 		}
 		try 
 		{
-			if(sessions_logout.is_have_session(constraint))
+			if(sessions.isHaveSession(constraint))
 			{
-				sessions_logout.killSession(constraint);
-				return messages_logout.reportSuccessMessage("You are Log-Out");
+				sessions.killSession(constraint);
+				return messages.reportSuccessMessage("You are Log-Out");
 			}
 			else
 			{
-				return messages_logout.reportErrorMessage("This session dont exist");
+				return messages.reportErrorMessage("This session dont exist");
 			}
 			
 		} 
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
-			Pool.giveInstance();
-			return messages_logout.reportErrorMessage(e.getMessage());
+			return messages.reportErrorMessage(e.getMessage());
 		}
 		
 	}

@@ -10,6 +10,32 @@ var moverect = -40;
 var scroll = false;
 var onuse = false;
 // ---------
+//function to chargue new videos 
+function chargueVideos(response){
+    if(response['results'] != "error"){
+        var iteratorjson = JSON.parse(response['message']);
+        for(var i=1; i<11; i++){
+            if(iteratorjson.hasOwnProperty(i.toString())){
+                json = JSON.parse(iteratorjson[i.toString()]);
+                if(json.hasOwnProperty("thumbnail")){
+                    var img = document.getElementById("img"+i.toString());
+                    var jsonThumbnail = JSON.parse(json['thumbnail']);
+                    img.src = getPath() + "video?user="+json['username']+"&name="+
+                    jsonThumbnail['name']+"."+jsonThumbnail['type'];
+                    img.hidden = false;
+                }
+                var hrefvideo = document.getElementById(i.toString());
+                var textp = document.getElementById("text"+i)
+                var textvideo = json['username'] + " - " + json['name'];
+                hrefvideo.setAttribute('href', getPath() + "video?user="+json['username']+"&name="+
+                json['name']+"."+json['type']);
+                textp.innerHTML = textvideo;
+
+            }
+        }
+    }
+}
+// -----
 //statics functions of navigator
 function move(){
     var navigator = document.getElementById(id_element_navigator);
@@ -138,6 +164,17 @@ window.onload = function(){
         window.localStorage.removeItem(session_data_parameter);
         window.location.href = "index.html";
     }
+    var myHeaders = new Headers();
+    var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+    };
+
+    fetch("news", requestOptions)
+    .then(response => response.json())
+    .catch(error => console.log('Error:' + error))
+    .then(response => chargueVideos(response));
 }
 
 function dashboardLoad(callback){
@@ -170,4 +207,5 @@ function dashboardLoad(callback){
         window.localStorage.removeItem(session_data_parameter);
         window.location.href = "index.html";
     }
+    
 }

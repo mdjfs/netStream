@@ -5,9 +5,9 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
+import dbComponent.DBComponent;
+import dbComponent.Pool;
 import helper.JSONManage;
-import resources.Database;
-import resources.Pool;
 
 public class InfoController {
 
@@ -15,9 +15,9 @@ public class InfoController {
 	
 	@SuppressWarnings("unchecked")
 	public JSONObject getInfo(String id) {
-		Database ConnectionSession = Pool.getInstance();
+		DBComponent conn = Pool.getDBInstance();
 		try {
-			ResultSet rs =ConnectionSession.selectWhereConstraintUnique("users", "id_users", id);
+			ResultSet rs = conn.exeQueryRS("select.where.id_users", new Object[]{Integer.parseInt(id)});
 			while(rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("username", rs.getString("name_users"));
@@ -31,7 +31,7 @@ public class InfoController {
 			return messages_info.reportErrorMessage(e.getMessage());
 		}
 		finally {
-			Pool.giveInstance();
+			Pool.returnDBInstance(conn);
 		}
 	}
 }

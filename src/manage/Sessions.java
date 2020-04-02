@@ -6,69 +6,67 @@ import java.time.Instant;
 import java.time.Month;
 import java.time.ZoneOffset;
 
-import resources.Database;
-import resources.Pool;
+import dbComponent.DBComponent;
+import dbComponent.Pool;
+import helper.Query;
 
 public class Sessions {
 	
 	
 	public void giveSession(String constraint) throws SQLException
 	{
-		Database ConnectionSession = Pool.getInstance();
-		ResultSet rs;
+		DBComponent conn = Pool.getDBInstance();
+		ResultSet rs; 
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "email_users", constraint);
+			rs = conn.exeQueryRS("select.where.email_users", new Object[] {constraint});
 		}
 		else
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "name_users", constraint);
+			rs =  conn.exeQueryRS("select.where.name_users", new Object[] {constraint});
 		}
 		int id = 0;
 		while(rs.next()) {
 			id = rs.getInt("id_users");
 		}
-		String SQL = "INSERT INTO sessions (id_users, date_time) VALUES ";
-		SQL += "("+id+",'"+Instant.now().toString()+"');";
-		ConnectionSession.insert(SQL);
-		Pool.giveInstance();
+		conn.exeSimple(new Query("insert.sessions", new Object[] {id, Instant.now().toString()}));
+		Pool.returnDBInstance(conn);
 		
 	}
 	
 	public void killSession(String constraint) throws SQLException
 	{
-		Database ConnectionSession = Pool.getInstance();
-		ResultSet rs;
+		DBComponent conn = Pool.getDBInstance();
+		ResultSet rs; 
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "email_users", constraint);
+			rs = conn.exeQueryRS("select.where.email_users", new Object[] {constraint});
 		}
 		else
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "name_users", constraint);
+			rs =  conn.exeQueryRS("select.where.name_users", new Object[] {constraint});
 		}
 		int id = 0;
 		while(rs.next()) {
 			id = rs.getInt("id_users");
 		}
-		String SQL = "DELETE FROM sessions WHERE id_users="+id+";";
-		ConnectionSession.delete(SQL);
-		Pool.giveInstance();
+		conn.exeSimple(new Query("delete.sessions.where.id_users", new Object[] {id}));
+		Pool.returnDBInstance(conn);
 		
 	}
 	
 	
-	public boolean is_have_session(String constraint) throws SQLException
+	public boolean isHaveSession(String constraint) throws SQLException
 	{
-		Database ConnectionSession = Pool.getInstance();
-		ResultSet rs;
+		DBComponent conn = Pool.getDBInstance();
+		ResultSet rs; 
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "email_users", constraint);
+			rs = conn.exeQueryRS("select.where.email_users", new Object[] {constraint});
 		}
 		else
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "name_users", constraint);
+			rs =  conn.exeQueryRS("select.where.name_users", new Object[] {constraint});
 		}
 		if(rs == null)
 			return false;
@@ -78,12 +76,12 @@ public class Sessions {
 		}
 		if (id == null)
 			return false;
-		rs = ConnectionSession.selectWhereConstraintUnique("sessions", "id_users", id);
+		rs = conn.exeQueryRS("select.sessions.where.id_users", new Object[] {Integer.parseInt(id)});
 		String time = null;
 		while(rs.next()) {
 			time = rs.getString("date_time");
 		}
-		Pool.giveInstance();
+		Pool.returnDBInstance(conn);
 		if(time == null)
 		{
 			return false;

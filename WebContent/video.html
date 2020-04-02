@@ -2,10 +2,29 @@
     <head>
         <title>Upload</title>
         <script src="js/dashboard.js"></script>
+        <script src="js/upload.js"></script>
+        <script src="js/video.js"></script>
         <link rel="stylesheet" href="styles/index.css">
         <link rel="stylesheet" href="styles/dashboard.css">
+        <link rel="stylesheet" href="styles/upload.css">
     </head>
     <body>
+
+
+        <div class="upload">
+            <div id="progresscontainer">
+                <div id="progress">
+
+                </div>
+            </div>
+            <p id="status">Select files</p>
+            <input id="name" type="text" placeholder="name of you video"><br/>
+            Select a thumbnail<input id="thumbnail" type="file"><br/>
+            Select a video<input id="video" type="file">
+            <button id="go" class="pinkbutton"> UPLOAD </button>
+        </div>
+
+
         <div class="toolbar">
             <p class="title">A small app to view movies</p>
             <img class="logo" src="sources/logo.png"/>
@@ -18,6 +37,5 @@
             <img id="profile"/>
             <p id="constraint"></p>
         </div>
-
     </body>
 </html>

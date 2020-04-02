@@ -20,14 +20,43 @@
     left: -5.5%;
 }
 .edit{
+    margin-top: 0%;
     background-image: url('backgrounds/edit.png');
     background-size: 100% 100%;
     background-color: transparent;
     border: none;
-    width:4%;
-    height:4%;
-    position:relative;
+    width:5%;
+    height:20%;
+    position:absolute;
     opacity:0.7;
+    margin-bottom: 0%;
+    margin-right: 0%;
+}
+#infodata{
+    position: absolute;
+    width: 40%;
+    left: 30%;
+    height: 40%;
+    top: 25%;
+}
+#infoimg{
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    height: 60%;
+    top: 25%;
+}
+.check{
+    background-image: url('backgrounds/check.png');
+    background-size: 100% 100%;
+    border: none;
+    width:8%;
+    height:10%;
+    opacity:0.7;
+    background-color: transparent;
+}
+.check:hover{
+    opacity:0.8;
 }
 .exit{
     background-image: url('backgrounds/exit.png');
@@ -36,13 +65,13 @@
     width:8%;
     height:10%;
     position:absolute;
-    left:92%;
+    left:97%;
     background-color: transparent;
 }
 .exit:hover{
     width:10%;
     height:12%;
-    left:90%;
+    left:95%;
 }
 .edit:hover{
     opacity:0.8;
@@ -54,15 +83,15 @@
     margin-left:5%;
 }
 .editphoto{
-    background-color:aqua;
-    opacity: 0.3;
+    background-color:black;
+    opacity: 1;
     position:absolute;
     left:35%;
     top:40%;
     width:30%;
     height:30%;
     font-family: 'Baloo Da 2', sans-serif;
-    color: black;
+    color: white;
     text-align: center;
     font-size: 2vw;
     border-radius: 10%;
@@ -76,6 +105,11 @@
     margin-right: 10%;
     text-align: center;
     position: relative;
+}
+#checkpass{
+    height: 20%;
+    top: 20%;
+    margin-bottom: 10%;
 }
 #progresscontainer{
     background-color: black;
@@ -91,36 +125,32 @@
     height: 100%;
     width: 0%;
 }
-#editemail{
-    left:40%;
-    top: -40%;
-}
 #changeusername{
     position:relative;
-    top:-115%;
-    left:40%;
+    left:60%;
+    height: 25%;
 }
 #changeemail{
     position:relative;
-    top:-90%;
-    left:40%;
-}
-#editusername{
-    top: -40%;
-    left:40%;
+    left:60%;
+    height: 50%;
 }
 .keydata{
     font-family: 'Baloo Da 2', sans-serif;
     font-weight: bolder;
     position: relative;
     left: 50%;
-    top: -60%;
-    font-size: 3vw;
+    font-size: 2vw;
+    margin-top: 0%;
+    margin-left: 0%;
+    margin-bottom: 0%;
 }
 .valuedata{
     font-family: 'Baloo Da 2', sans-serif;
     position: relative;
     left: 50%;
-    top: -70%;
-    font-size: 2vw;
+    font-size: 1vw;
+    margin-top: 5%;
+    margin-left: 0%;
+    margin-bottom: 5%;
 }

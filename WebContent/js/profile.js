@@ -12,6 +12,9 @@ const id_edit_username = "editusername";
 const id_edit_email = "editemail";
 const id_change_username = "changeusername";
 const id_change_email = "changeemail";
+const id_button_check_user = "checkuser";
+const id_button_check_email = "checkemail";
+const id_input_check_pass = "checkpass";
 
 function chargeProfile(){
     var img = document.getElementById(id_profile_img);
@@ -107,6 +110,9 @@ window.onload = function(){
     button.onclick =  function(){
         var box = document.getElementById(id_box_edit);
         box.hidden = ! box.hidden;
+        document.getElementById(id_input_check_pass).hidden = true;
+        document.getElementById(id_file).hidden = false;
+        document.getElementById(id_text_status).innerHTML = "Select a file";
     }
     button = document.getElementById(id_button_exitbox);
     button.onclick = function() {
@@ -137,6 +143,162 @@ window.onload = function(){
         var inputUsername = document.getElementById(id_change_username);
         inputUsername.hidden = ! inputUsername.hidden;
         inputUsername.value = username.innerHTML;
+        var buttonCheck = document.getElementById(id_button_check_user);
+        buttonCheck.hidden = ! buttonCheck.hidden;
+        function sendUpdate(value, password){
+            var myHeaders = new Headers();
+            var raw = JSON.stringify({"password":password,"parameter":"name","value":value});
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            function charguenewSession(response){
+                document.getElementById(id_text_status).innerHTML = response['message'];
+                if(response['results'] != "error"){
+                    if (window.localStorage) {
+                        function setSession(response){
+                            if(response['results'] != "error"){
+                                window.localStorage.removeItem(session_data_parameter);
+                                console.log(response['message']);
+                                window.localStorage.setItem(session_data_parameter, response['message']);
+                            }
+                        }
+                        function getData(callback){
+                            var myHeaders = new Headers();
+                            var requestOptions = {
+                                method: 'PUT',
+                                headers: myHeaders,
+                                redirect: 'follow'
+                              };
+                              fetch('video', requestOptions)
+                                .then(response => response.json())
+                                .catch(error => console.log('Error:' + error))
+                                .then(response => callback(response));
+                        }
+                        getData(setSession);
+                     }
+                    else
+                    {
+                        throw new Error('Tu Browser no soporta localStorage!');
+                    }
+                }
+            }
+            fetch('update', requestOptions).then(response => response.json())
+            .catch(error => console.log('Error:' + error))
+            .then(response => charguenewSession(response));
+        }
+        function getPassword(input){
+            var box = document.getElementById(id_box_edit);
+            box.hidden = false;
+            var file = document.getElementById(id_file);
+            file.hidden = true;
+            document.getElementById(id_text_status).innerHTML = "Insert you pass";
+            var inputPass = document.getElementById(id_input_check_pass);
+            inputPass.hidden = false;
+            input.hidden = ! input.hidden;
+            buttonCheck.hidden = ! buttonCheck.hidden;
+            username.hidden = ! username.hidden;
+            inputPass.onkeyup = function(event){
+                var isenter = (event.key == "Enter");
+                if (isenter){
+                    sendUpdate(input.value, inputPass.value);
+                }
+            }
+        }
+        inputUsername.onkeyup = function(event){
+            var isenter = (event.key == "Enter");
+            if(isenter){
+                getPassword(inputUsername);
+            }
+        };
+        var button = document.getElementById(id_button_check_user);
+        button.onclick = function(){
+            getPassword(inputUsername);
+        };
     }
-
+    button = document.getElementById(id_edit_email);
+    button.onclick = function(){
+        var username = document.getElementById(id_email);
+        username.hidden = ! username.hidden;
+        var inputUsername = document.getElementById(id_change_email);
+        inputUsername.hidden = ! inputUsername.hidden;
+        inputUsername.value = username.innerHTML;
+        var buttonCheck = document.getElementById(id_button_check_email);
+        buttonCheck.hidden = ! buttonCheck.hidden;
+        function sendUpdate(value, password){
+            var myHeaders = new Headers();
+            console.log(value);
+            var raw = JSON.stringify({"password":password,"parameter":"email","value":value});
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            function charguenewSession(response){
+                document.getElementById(id_text_status).innerHTML = response['message'];
+                if(response['results'] != "error"){
+                    if (window.localStorage) {
+                        function setSession(response){
+                            if(response['results'] != "error"){
+                                window.localStorage.removeItem(session_data_parameter);
+                                console.log(response['message']);
+                                window.localStorage.setItem(session_data_parameter, response['message']);
+                            }
+                        }
+                        function getData(callback){
+                            var myHeaders = new Headers();
+                            var requestOptions = {
+                                method: 'PUT',
+                                headers: myHeaders,
+                                redirect: 'follow'
+                              };
+                              fetch('video', requestOptions)
+                                .then(response => response.json())
+                                .catch(error => console.log('Error:' + error))
+                                .then(response => callback(response));
+                        }
+                        getData(setSession);
+                     }
+                    else
+                    {
+                        throw new Error('Tu Browser no soporta localStorage!');
+                    }
+                }
+            }
+            fetch('update', requestOptions).then(response => response.json())
+            .catch(error => console.log('Error:' + error))
+            .then(response => charguenewSession(response));
+        }
+        function getPassword(input){
+            var box = document.getElementById(id_box_edit);
+            box.hidden = false;
+            var file = document.getElementById(id_file);
+            file.hidden = true;
+            document.getElementById(id_text_status).innerHTML = "Insert you pass";
+            var inputPass = document.getElementById(id_input_check_pass);
+            inputPass.hidden = false;
+            input.hidden = ! input.hidden;
+            buttonCheck.hidden = ! buttonCheck.hidden;
+            username.hidden = ! username.hidden;
+            inputPass.onkeyup = function(event){
+                var isenter = (event.key == "Enter");
+                if (isenter){
+                    sendUpdate(input.value, inputPass.value);
+                }
+            }
+        }
+        inputUsername.onkeyup = function(event){
+            var isenter = (event.key == "Enter");
+            if(isenter){
+                getPassword(inputUsername);
+            }
+        };
+        var button = document.getElementById(id_button_check_user);
+        button.onclick = function(){
+            getPassword(inputUsername);
+        };
+    }
 }
