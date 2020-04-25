@@ -1,73 +1,115 @@
 package manage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.HashPassword;
-import aux.JSONMessages;
-import aux.Sanitize;
-import resources.Database;
-import resources.Pool;
+import dbComponent.DBComponent;
+import dbComponent.Pool;
+import helper.HashPassword;
+import helper.JSONManage;
+import helper.Query;
+import helper.Sanitize;
 
 public class UpdateController {
 	
-	private Auth checker_islogin = new Auth();
-	private FindID find_user = new FindID();
-	private HashPassword hash_new_password = new HashPassword();
-	private JSONMessages messages_update = new JSONMessages();
-	private Sessions sessions_update = new Sessions();
-	private Sanitize sanitize_update = new Sanitize();
+	private Auth check = new Auth();
+	private FindID find = new FindID();
+	private HashPassword hashing = new HashPassword();
+	private JSONManage messages = new JSONManage();
+	private Sessions sessions = new Sessions();
+	private Sanitize sanitize = new Sanitize();
 	
-	@SuppressWarnings("unchecked")
-	public JSONObject setUpdate(JSONObject input_json) {
-		JSONObject output_json = new JSONObject();
+	public JSONObject setUpdate(String id, JSONObject json_request) {
 		try {
-			String constraint = find_user.returnConstraintbyID(input_json.get("id").toString());
-			boolean have_session = sessions_update.is_have_session(constraint);
-			if(!have_session)
-				return messages_update.reportErrorMessage("The user not have session");
-			if(constraint==null)
-				return messages_update.reportErrorMessage("Dont exists user by this id");
-			boolean[] status = checker_islogin.is_user_validate(constraint, 
-					input_json.get("password").toString());
-			if(status[0] && status[1]) {
-				String id = input_json.get("id").toString();
-				String param_to_update = input_json.get("parameter").toString();
-				String value_to_update = input_json.get("value").toString();
-				boolean param_sanitize = sanitize_update.is_sanitize(param_to_update);
-				boolean value_sanitize = sanitize_update.is_sanitize(value_to_update);
-				boolean id_sanitize = sanitize_update.is_sanitize(id);
-				if(param_sanitize && value_sanitize && id_sanitize) 
+			String constraint = find.returnConstraintbyID(id);
+			boolean[] status = check.isUserValidate(constraint, 
+					json_request.get("password").toString());
+			if(status[0] && status[1]) 
+			{
+				boolean have_session = sessions.isHaveSession(constraint);
+				if(!have_session)
+					return messages.reportErrorMessage("The user not have session");
+				if(constraint==null)
+					return messages.reportErrorMessage("Dont exists user by this id");
+				boolean id_sanitize = sanitize.isSanitize(id);
+				if(id_sanitize) 
 				{
+					String param_to_update = json_request.get("parameter").toString();
+					String value_to_update = json_request.get("value").toString();
 					updateParam(param_to_update, value_to_update, id);
-					return messages_update.reportSuccessMessage(param_to_update + " is update");	
+					return messages.reportSuccessMessage(param_to_update + " is update");	
 				}
 				else
 				{
-					return messages_update.reportErrorMessage("You inputs not have the requeriments");
+					return messages.reportErrorMessage("You inputs not have the requeriments");
 				}
 			}
-			else
+			if(!status[0])
 			{
-				return messages_update.reportErrorMessage("The password is invalid !");
+				String message = "The user dont exists, you arent registered ?";
+				return messages.reportErrorMessage(message);
 			}
-		} catch (NoSuchAlgorithmException | NullPointerException | SQLException e) {
-			Pool.giveInstance();
+			if(!status[1])
+			{
+				String message = "The password is wrong !";
+				return messages.reportErrorMessage(message);
+			}
+			String message = "You find a easter egg.";
+			return messages.reportErrorMessage(message);
+		} 
+		catch (NoSuchAlgorithmException | NullPointerException | SQLException | FileNotFoundException e) {
 			e.printStackTrace();
-			return messages_update.reportErrorMessage(e.getMessage());
+			return messages.reportErrorMessage(e.getMessage());
 		}
 	}
 	
-	private void updateParam(String param, String value, String id) throws SQLException, NoSuchAlgorithmException {
-		Database ConnectionUpdate = Pool.getInstance();
+	private void updateParam(String param, String value, String id) throws SQLException, NoSuchAlgorithmException, FileNotFoundException {
+
+		param += "_users";
 		if(param.equals("password_users")) 
 		{
-			value = hash_new_password.ToHashPassword(value);
+			value = hashing.ToHashPassword(value);
 		}
-		ConnectionUpdate.update("UPDATE users SET "+param+"='"+value+"' WHERE id_users='"+id+"';");
-		Pool.giveInstance();
+		if(param.equals("name_users")) {
+			DBComponent conn = Pool.getDBInstance();
+			ResultSet res = conn.exeQueryRS("select.where.id_users", new Object[] {Integer.parseInt(id)});
+			System.out.println(id);
+			while(res.next()) {
+				File file = new File(properties.Properties.URI_SOURCES + res.getString("name_users"));
+				if(!file.exists())
+					file.mkdirs();
+				if(file.exists()) {
+					if(file.isDirectory()) {
+						conn.exeSimple(new Query("update."+param+".where.id_users", new Object[] {value, Integer.parseInt(id)}));
+						File filerename = new File(properties.Properties.URI_SOURCES + value);
+						file.renameTo(filerename);
+						Pool.returnDBInstance(conn);
+						break;
+					}
+					else {
+						Pool.returnDBInstance(conn);
+						throw new FileNotFoundException();
+					}
+				}
+				else {
+					Pool.returnDBInstance(conn);
+					throw new FileNotFoundException();
+				}
+			}
+		}
+		else {
+			DBComponent conn = Pool.getDBInstance();
+			ResultSet res = conn.exeQueryRS("select.where.id_users", new Object[] {Integer.parseInt(id)});
+			while(res.next()) {
+				conn.exeSimple(new Query("update."+param+".where.id_users", new Object[] {value, Integer.parseInt(id)}));
+				break;
+			}
+			Pool.returnDBInstance(conn);
+		}
 	}
 }

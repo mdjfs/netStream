@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>My Profile</title>
+        <script src="js/dashboard.js"></script>
+        <script src="js/upload.js"></script>
+        <script src="js/profile.js"></script>
+        <link rel="stylesheet" href="styles/index.css">
+        <link rel="stylesheet" href="styles/dashboard.css">
+        <link rel="stylesheet" href="styles/profile.css">
+    </head>
+    <body>
+
+        <div class="infoprofile">
+            <h1 class="titleinfo" >My Profile</h1>
+            <div id="infoimg">
+                <img id="profileimg">
+                <button id="editphoto" class="edit"></button></img>
+            </div>
+            <div id="infodata">
+                <p class="keydata">username:
+                    <br/>
+                    <button id="editusername" class="edit"></button>
+                </p>
+                <p id="username" class="valuedata"></p>
+                <input type="text" id="changeusername" hidden><button id="checkuser" class="check" hidden></button></input>
+                <p class="keydata">
+                    email:<br/>
+                    <button id="editemail" class="edit"></button></p>
+                <p id="email" class="valuedata"></p>
+                <input type="text" id="changeemail" hidden><button id="checkemail" class="check" hidden></button>
+            </div>
+        </div>
+        <div id="boxedit" class="editphoto" hidden>
+            <button id="exitbox" class="exit"></button>
+            <div id="progresscontainer" hidden>
+                <div id="progress">
+
+                </div>
+            </div>
+            <input id="file" type="file">
+            <input id="checkpass" type="password" name="password" placeholder="password" hidden>
+            <p id="status">Select a pic</p>
+        </div>
+        <div class="toolbar">
+            <p class="title">A small app to view movies</p>
+            <img class="logo" src="sources/logo.png"/>
+            <div id="navigation" class="navigation" hidden>
+                <a href="myvideo.html"><button class="navigationbutton">My videos</button></a>
+                <a href="video.html"><button class="navigationbutton">Upload videos</button></a>
+                <a href="dashboard.html"><button class="navigationbutton">Dashboard</button></a>
+                <button id="logout" class="navigationbutton">Logout</button>
+            </div>
+            <img id="profile"/>
+            <p id="constraint"></p>
+        </div>
+    </body>
+</html>

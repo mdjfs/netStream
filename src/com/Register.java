@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,47 +13,50 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import aux.JSONMessages;
+import helper.JSONManage;
 import manage.RegisterController;
 
 @WebServlet("/register")
-@MultipartConfig
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
-	private JSONMessages servlet_messages = new JSONMessages();
+	private JSONManage servlet_messages = new JSONManage();
+	
+			// Parametros que debe enviar el json:
+	private String json_keys_register[] = {"name", "email", "password"};
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setHeader("Access-Control-Allow-Origin","*");
+		/* Endpoint dedicado a Registrar Usuarios, lee un json por Raw */
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		String json = request.getParameter("json");
+		String json = servlet_messages.readRaw(request.getReader());
 		if (json==null)
 		{
-			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
+			out.print(servlet_messages.reportErrorMessage("Unfound json"));
 		}
-		try 
+		else
 		{
-			JSONObject json_response;
-			JSONObject json_request = (JSONObject) parser.parse(json);
-			boolean is_name = json_request.containsKey("name");
-			boolean is_password = json_request.containsKey("password");
-			boolean is_email = json_request.containsKey("email");
-			if(is_name && is_password && is_email)
+			try 
 			{
-				RegisterController request_register = new RegisterController();
-				json_response =  request_register.setRegister(json_request);
-				out.print(json_response);
-			}
-			else
+				JSONObject json_response;
+				JSONObject json_request = (JSONObject) parser.parse(json);
+				boolean is_all_keys = servlet_messages.is_all_keys(json_request, json_keys_register);
+				if(is_all_keys)
+				{
+					RegisterController request_register = new RegisterController();
+					json_response =  request_register.setRegister(json_request);
+					out.print(json_response);
+				}
+				else
+				{
+					out.print(servlet_messages.reportErrorMessage("Keys json failed, you need this keys: " + servlet_messages.say_keys(json_keys_register)));
+				}
+			} 
+			catch (ParseException e) 
 			{
-				out.print(servlet_messages.reportErrorMessage("data json failed"));
+				e.printStackTrace();
+				out.print(servlet_messages.reportErrorMessage("invalid json"));
 			}
-		} 
-		catch (ParseException e) 
-		{
-			e.printStackTrace();
-			out.print(servlet_messages.reportErrorMessage("invalid json"));
 		}
 	}
 }

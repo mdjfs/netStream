@@ -3,24 +3,24 @@ package manage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import resources.Database;
-import resources.Pool;
+import dbComponent.DBComponent;
+import dbComponent.Pool;
 
 public class FindID {
 	
 	
 	public String returnIDbyConstraint(String constraint) throws SQLException {
-		Database ConnectionSession = Pool.getInstance();
+		DBComponent conn = Pool.getDBInstance();
 		ResultSet rs;
 		if(constraint.contains("@"))
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "email_users", constraint);
+			rs = conn.exeQueryRS("select.where.email_users", new Object[]{constraint});
 		}
 		else
 		{
-			rs = ConnectionSession.selectWhereConstraintUnique("users", "name_users", constraint);
+			rs = conn.exeQueryRS("select.where.name_users", new Object[]{constraint});
 		}
-		Pool.giveInstance();
+		Pool.returnDBInstance(conn);
 		String id = null;
 		while(rs.next()) {
 			id = rs.getString("id_users");
@@ -29,10 +29,10 @@ public class FindID {
 	}
 	
 	public String returnConstraintbyID(String id) throws SQLException {
-		Database ConnectionSession = Pool.getInstance();
+		DBComponent conn = Pool.getDBInstance();
 		ResultSet rs;
-		rs = ConnectionSession.selectWhereConstraintUnique("users", "id_users", id);
-		Pool.giveInstance();
+		rs = conn.exeQueryRS("select.where.id_users", new Object[]{Integer.parseInt(id)});
+		Pool.returnDBInstance(conn);
 		String constraint = null;
 		while(rs.next()) {
 			constraint = rs.getString("name_users");

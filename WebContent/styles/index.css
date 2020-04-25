@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Baloo+Da+2&display=swap');
+
+body{
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    overflow-x: hidden;
+    background: radial-gradient(rgb(81, 255, 255), aqua 99.9%);
+}
+
+input[type="text"]{
+    position:relative;
+    border-style: solid;
+    border-radius: 5%;
+    border-color: aqua;
+    width: 50%;
+    height: 7.5%;
+    font-size: 1.2vw;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+
+input[type="text"]:focus{
+    background-color: rgba(0,0,0,0.3);
+}
+input[type="password"]{
+    position:relative;
+    border-style: solid;
+    border-radius: 5%;
+    border-color: aqua;
+    height: 7.5%;
+    width: 50%;
+    font-size: 1.2vw;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+
+.errors{
+    font-size: 1.2vw;
+    color: red;
+}
+
+input[type="password"]:focus{
+    background-color: rgba(0,0,0,0.3);
+}
+
+
+.toolbar{
+    background-color: rgba(255,255,255,0.9);
+    width: 100%;
+    height: 10%;
+    top: 0%;
+    left: 0%;
+    position: absolute;
+}
+.alert{
+    position: static;
+    width: 4%;
+}
+.register{
+    background-image: url('backgrounds/whitetexture.jpeg');
+    width: 40%;
+    height: 70%;
+    border-radius: 5%;
+    border-color: whitesmoke;
+    font-family: 'Baloo Da 2', sans-serif;
+    border-width: 5%;
+    font-style: border;
+    font-size: 1.5vw;
+    left: 52%;
+    top: 20%;
+    position: relative;
+    text-align: center;
+}
+.login{
+    background-image: url('backgrounds/whitetexture.jpeg');
+    width: 35%;
+    height: 60%;
+    top: 25%;
+    left: 20%;
+    border-radius: 5%;
+    border-color: whitesmoke;
+    font-family: 'Baloo Da 2', sans-serif;
+    border-width: 5%;
+    font-style: border;
+    font-size: 1.5vw;
+    position: absolute;
+    text-align: center;
+}
+.invitation{
+    position: relative;
+    font-family: 'Pacifico', cursive;
+    font-size: 3vw;
+    font-style: border;
+    color: black;
+}
+#invitation1{
+    margin-top: -30%;
+    margin-bottom: 0%;
+    left: 5%;
+}
+#invitation2{
+    margin-top: 0%;
+    left: 5%;
+}
+.imgview{
+    position: relative;
+    left: 10%;
+    width: 30%;
+}
+
+.registertext{
+    font-family: 'Baloo Da 2', sans-serif;
+    font-size: 3vw;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.logo{
+    position:absolute;
+    left:5%;
+    height: 170%;
+    top:-40%;
+}
+
+.title{
+    font-family: 'Pacifico', cursive;
+    left:8%;
+    top:43%;
+    position: absolute;
+    font-size: 2vh;
+    opacity: 0.7;
+}
+
+.whitebutton{
+    position: absolute;
+    background: none;
+    left: 85%;
+    top:20%;
+    text-decoration: none;
+    font-family: 'Baloo Da 2', sans-serif;
+    font-size: 1.3vw;
+    margin-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    box-shadow: none;
+    border-style: double;
+    border-radius: 10%;
+    border-color: rgba(0, 0, 0, 0.7);
+    width: 8%;
+    height: 60%;
+}
+
+.whitebutton:hover{
+    background-color: grey;
+    color: white;
+}
+
+.pinkbutton{
+    position: relative;
+    background-color: aqua;
+    text-decoration: none;
+    font-family: 'Baloo Da 2', sans-serif;
+    font-size: 1.3vw;
+    margin-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    box-shadow: none;
+    border-style: double;
+    width: 30%;
+    height:8%;
+}
+
+.pinkbutton:hover{
+    background-color: aquamarine;
+}
+
+
+@media (orientation: portrait){
+    .register{
+        left: 20%;
+        width: 60%;
+        height:40%;
+    }
+    .login{
+        width: 60%;
+        height: 30%;
+        left: 20%;
+    }
+    .invitation{
+        font-size: 5vw;
+    }
+    .imgview{
+        width: 50%;
+    }
+    #invitation1{
+        margin-top: 50%;
+    }
+    .whitebutton{
+        width: 20%;
+        left: 70%;
+        font-size: 3vw;
+    }
+}

@@ -1,9 +1,9 @@
-package aux;
+package helper;
 
 public class Sanitize {
 	
 	
-	public boolean is_sanitize(String stringtocheck)
+	public boolean isSanitize(String stringtocheck)
 	{
 		if(stringtocheck.contains("'") || stringtocheck.contains(";")) 
 		{

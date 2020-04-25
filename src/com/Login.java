@@ -5,87 +5,89 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import aux.JSONMessages;
+import helper.JSONManage;
 import manage.FindID;
 import manage.LoginController;
 
 
 
 @WebServlet("/login")
-@MultipartConfig
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JSONParser parser = new JSONParser();
-	private JSONMessages servlet_messages = new JSONMessages();
+	private JSONManage servlet_messages = new JSONManage();
+	
+		//Parametros que debe contener el json:
+	private String json_keys_login[] = {"constraint", "password"};
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/* Endpoint que se encarga del Login y lee un json por raw */
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		String json = request.getParameter("json");
+		String json = servlet_messages.readRaw(request.getReader());
 		if (json==null)
 		{
-			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
+			out.print(servlet_messages.reportErrorMessage("Unfound json"));
 		}
-		try 
+		else
 		{
-			JSONObject json_response;
-			JSONObject json_request = (JSONObject) parser.parse(json);
-			boolean is_constraint = json_request.containsKey("constraint");
-			boolean is_password = json_request.containsKey("password");
-			if(is_constraint && is_password)
+			try 
 			{
-				LoginController request_login = new LoginController();
-				json_response =  request_login.setLogin(json_request);
-				if(json_response.get("status").equals("200"))
+				JSONObject json_response;
+				JSONObject json_request = (JSONObject) parser.parse(json);
+				boolean is_all_keys = servlet_messages.is_all_keys(json_request, json_keys_login);
+				if(is_all_keys)
 				{
-					FindID give_id_cookie = new FindID();
-					String id = null;
-					try 
+					LoginController request_login = new LoginController();
+					json_response =  request_login.setLogin(json_request);
+					if(json_response.get("status").equals("200"))
 					{
-						id = give_id_cookie.returnIDbyConstraint(json_request.get("constraint").toString());
-					} 
-					catch (SQLException e) 
-					{
-						out.print(servlet_messages.reportErrorMessage(e.getMessage()));
-						e.printStackTrace();
-					}
-					if(id != null) {
-						Cookie ID =new Cookie("ID",id);
-						System.out.println(request.getCookies());
-						response.addCookie(ID);
-						out.print(json_response);
+						FindID give_id_session = new FindID();
+						String id = null;
+						try 
+						{
+							id = give_id_session.returnIDbyConstraint(json_request.get("constraint").toString());
+							if(id != null) {
+								HttpSession create_session = request.getSession(true);
+								create_session.setAttribute("ID", id);
+								out.print(json_response);
+							}
+							else
+							{
+								out.print(servlet_messages.reportErrorMessage("error in session"));
+							}
+						} 
+						catch (SQLException e) 
+						{
+							out.print(servlet_messages.reportErrorMessage(e.getMessage()));
+							e.printStackTrace();
+						}
 					}
 					else
 					{
-						out.print(servlet_messages.reportErrorMessage("error on create session"));
+						out.print(json_response);
 					}
 				}
 				else
 				{
-					out.print(json_response);
+					out.print(servlet_messages.reportErrorMessage("Keys json failed, you need this keys: " + servlet_messages.say_keys(json_keys_login)));
 				}
-			}
-			else
+			} 
+			catch (ParseException e) 
 			{
-				out.print(servlet_messages.reportErrorMessage("data json failed"));
+				e.printStackTrace();
+				out.print(servlet_messages.reportErrorMessage("invalid json"));
 			}
-		} 
-		catch (ParseException e) 
-		{
-			e.printStackTrace();
-			out.print(servlet_messages.reportErrorMessage("invalid json"));
 		}
 	}
-
 }

@@ -4,55 +4,43 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import aux.JSONMessages;
+import helper.JSONManage;
 import manage.LogoutController;
 
 @WebServlet("/logout")
-@MultipartConfig
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private JSONParser parser = new JSONParser();
-	private JSONMessages servlet_messages = new JSONMessages();
+	private JSONManage servlet_messages = new JSONManage();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setHeader("Access-Control-Allow-Origin","*");
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		String json = request.getParameter("json");
-		if (json==null)
-		{
-			out.print(servlet_messages.reportErrorMessage("Dont exist parameter json"));
-		}
-		try 
-		{
-			JSONObject json_response;
-			JSONObject json_request = (JSONObject) parser.parse(json);
-			boolean is_constraint = json_request.containsKey("constraint");
-			if(is_constraint)
+		HttpSession session_logout = request.getSession(false);
+		if( session_logout != null ) {
+			String id = (String) session_logout.getAttribute("ID");
+			if( id != null )
 			{
-				LogoutController request_logout = new LogoutController();
-				json_response =  request_logout.setLogout(json_request);
+				LogoutController make_logout = new LogoutController();
+				JSONObject json_response = make_logout.setLogout(id);
+				session_logout.removeAttribute("ID");
 				out.print(json_response);
 			}
 			else
 			{
-				out.print(servlet_messages.reportErrorMessage("data json failed"));
+				out.print(servlet_messages.reportErrorMessage("You aren't log-in !"));
 			}
-		} 
-		catch (ParseException e) 
+		}
+		else
 		{
-			e.printStackTrace();
-			out.print(servlet_messages.reportErrorMessage("invalid json"));
+			out.print(servlet_messages.reportErrorMessage("You not have session"));
 		}
 	}
 

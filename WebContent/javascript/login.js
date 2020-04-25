@@ -6,19 +6,22 @@ function manage_response(response) {
   }
 }
 
+
+var myHeaders = new Headers();
+
+
 function send() {
   var logname = document.getElementById("1");
   var logpass = document.getElementById("2");
-  var form = new FormData();
-  form.append("json", '{"constraint":"' +
-    logname.value + '", "password":"' + logpass.value + '"}');
-  fetch('login', {
+  raw = '{"constraint": "'+logname.value+'", "password":"'+logpass.value+'"}';
+  var requestOptions = {
     method: 'POST',
-    credentials: 'include',
-    body: form,
-  })
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  fetch('login', requestOptions)
     .then(response => response.json())
     .catch(error => console.log('Error:' + error))
     .then(response => manage_response(response));
 }
-

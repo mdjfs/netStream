@@ -1,20 +1,27 @@
 <html>
-
-<head>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="javascript/login.js"></script>
-</head>
-
-<body>
-    <div class="masterdiv">
-        <div class="box_inputs">
-            <input id="1" name="constraint" class="input" placeholder="username or email" type="text">
-            <input id="2" name="pass" class="input" placeholder="password" type="password">
-            <button onclick="send()" class="submit">Sign in</button>
+    <head>
+        <title>sign in</title>
+        <script src="js/signin.js"></script>
+        <link rel="stylesheet" href="styles/index.css">
+    </head>
+    <body>
+        <div class="toolbar">
+            <p class="title">A small app to view movies</p>
+            <img class="logo" src="sources/logo.png"/>
         </div>
-        <a href="signup.html"><img class="signup_redirect" src="images/signup.png"></img></a>
+        <div class="login">
+            <h3 class="registertext">sign in to NetStream</h3>
+            <form>
+                Email or Username<br/>
+                <input id="fieldconstraint" type="text" name="constraint" placeholder="email or username"> <br/>
+                Password <br/>
+                <input id="fieldpassword" type="password" name="password" placeholder="password">
+                <img id="alert" class="alert" src="sources/alert.png" hidden/><br/>
+            </form>
+            <p id="errors" class="errors"></p>
+            <button class="pinkbutton" onclick=send()>sign in</button>
+        </div>
+        
 
-    </div>
-</body>
-
+    </body>
 </html>

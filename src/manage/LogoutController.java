@@ -4,37 +4,42 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONMessages;
-import resources.Pool;
+import helper.JSONManage;
 
 public class LogoutController {
 	
-	Sessions sessions_logout = new Sessions();
-	JSONMessages messages_logout = new JSONMessages();
+	Sessions sessions = new Sessions();
+	JSONManage messages = new JSONManage();
 	
 	
-	@SuppressWarnings("unchecked")
-	public JSONObject setLogout(JSONObject input_json) 
+	public JSONObject setLogout(String id) 
 	{
-		JSONObject output_json = new JSONObject();
+		FindID Logout_ID = new FindID();
+		String constraint;
+		try {
+			constraint = Logout_ID.returnConstraintbyID(id);
+		} 
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return messages.reportErrorMessage(e1.getMessage());
+		}
 		try 
 		{
-			if(sessions_logout.is_have_session(input_json.get("constraint").toString()))
+			if(sessions.isHaveSession(constraint))
 			{
-				sessions_logout.killSession(input_json.get("constraint").toString());
-				return messages_logout.reportSuccessMessage("You are Log-Out");
+				sessions.killSession(constraint);
+				return messages.reportSuccessMessage("You are Log-Out");
 			}
 			else
 			{
-				return messages_logout.reportErrorMessage("This session dont exist");
+				return messages.reportErrorMessage("This session dont exist");
 			}
 			
 		} 
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
-			Pool.giveInstance();
-			return messages_logout.reportErrorMessage(e.getMessage());
+			return messages.reportErrorMessage(e.getMessage());
 		}
 		
 	}

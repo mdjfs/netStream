@@ -2,61 +2,68 @@ package manage;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
-import aux.JSONMessages;
-import aux.Sanitize;
-import resources.Database;
-import resources.Pool;
+import helper.JSONManage;
+import helper.Query;
+import helper.Sanitize;
+import dbComponent.DBComponent;
+import dbComponent.Pool;
 
 public class DeleteController {
-	private Auth checker_islogin = new Auth();
-	private FindID find_user = new FindID();
-	private JSONMessages message_delete = new JSONMessages();
-	private Sessions sessions_delete = new Sessions();
-	private Sanitize sanitize_delete = new Sanitize();
+	private FindID find = new FindID();
+	private JSONManage message = new JSONManage();
+	private Sessions sessions = new Sessions();
+	private Sanitize sanitize = new Sanitize();
+	private Auth check = new Auth();
 	
-	@SuppressWarnings("unchecked")
-	public JSONObject setDelete(JSONObject input_json) {
-		JSONObject output_json = new JSONObject();
+	public JSONObject setDelete(String id, JSONObject json_request) {
 		try {
-			String constraint = find_user.returnConstraintbyID(input_json.get("id").toString());
-			boolean have_session = sessions_delete.is_have_session(constraint);
-			if(!have_session)
-				return message_delete.reportErrorMessage("The user not have session");
-			if(constraint==null)
-				return message_delete.reportErrorMessage("Dont exists user by this id");
-			boolean[] status = checker_islogin.is_user_validate(constraint, 
-					input_json.get("password").toString());
-			if(status[0] && status[1]) {
-				String id = input_json.get("id").toString();
-				boolean id_sanitize = sanitize_delete.is_sanitize(id);
+			
+			String constraint = find.returnConstraintbyID(id);
+			boolean[] status = check.isUserValidate(constraint, 
+					json_request.get("password").toString());
+			if(status[0] && status[1]) 
+			{
+				boolean have_session = sessions.isHaveSession(constraint);
+				if(!have_session)
+					return message.reportErrorMessage("The user not have session");
+				if(constraint==null)
+					return message.reportErrorMessage("Dont exists user by this id");
+				boolean id_sanitize = sanitize.isSanitize(id);
 				if(id_sanitize) 
 				{
 					deleteUser(id);
-					return message_delete.reportSuccessMessage("user by id "+ id+ " is delete");	
+					return message.reportSuccessMessage("user by id "+ id + " is delete");	
 				}
 				else
 				{
-					return message_delete.reportErrorMessage("You inputs not have the requeriments");
+					return message.reportErrorMessage("You inputs not have the requeriments");
 				}
 			}
-			else
+			if(!status[0])
 			{
-				return message_delete.reportErrorMessage("The password is invalid !");
+				return message.reportErrorMessage("The user dont exists, you arent registered ?");
 			}
-		} catch (NoSuchAlgorithmException | NullPointerException | SQLException e) {
-			Pool.giveInstance();
+			if(!status[1])
+			{
+				return message.reportErrorMessage("The password is wrong !");
+			}
+			return message.reportErrorMessage("You find a easter egg.");
+		} catch (NullPointerException | SQLException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
-			return message_delete.reportErrorMessage(e.getMessage());
+			return message.reportErrorMessage(e.getMessage());
 		}
 	}
 	
 	private void deleteUser(String id) throws SQLException {
-		Database ConnectionUpdate = Pool.getInstance();
-		ConnectionUpdate.delete("DELETE FROM sessions WHERE id_users='"+id+"';");
-		ConnectionUpdate.delete("DELETE FROM users WHERE id_users='"+id+"';");
-		Pool.giveInstance();
+		DBComponent conn = Pool.getDBInstance();
+		ArrayList<Query> array = new ArrayList<Query>();
+		array.add(new Query("delete.sessions.where.id_users", new Object[] {id}));
+		array.add(new Query("delete.where.id_users", new Object[] {Integer.parseInt(id)}));
+		conn.exeBatch(array);
+		Pool.returnDBInstance(conn);
 	}
 }
